@@ -40,12 +40,13 @@ export default class Webgl {
   }
 
   runKoch(init,n){
+    let rotation = 0
     let x =-10
     let y =-10
     let z=0
     let r=0
     let instruction=init;
-    let str = "TTTF-TTTF-TTTF-TTTS-TB";
+    let str = "TTTF-TTTF-TTTF+TTTS-TB";
     for(let i=0;i<n;i++){
       let tmp=''
       instruction.split('').forEach((c) => {
@@ -62,7 +63,18 @@ export default class Webgl {
       if(c=="F"){
         c=str
         this.createCube(x,y,z,r,'#FF0000')
-        this.createCube(x+5,y,z,r,'#FF0000')
+        if(rotation === 0){
+          this.createCube(x+5,y,z,r,'#FF0000')
+        }
+        if(rotation === 1){
+          this.createCube(x,y,z+5,r,'#FF0000')
+        }
+        if(rotation === 2){
+          this.createCube(x-5,y,z,r,'#FF0000')
+        }
+        if(rotation === 3){
+          this.createCube(x,y,z-5,r,'#FF0000')
+        }
         /*x+=5*Math.cos(r);*/
         y+=5
       } else if(c=="T"){
@@ -72,7 +84,18 @@ export default class Webgl {
       } else if(c=="S"){
         c=str
         this.createCube(x,y,z,r,'#0000FF')
-        this.createCube(x+5,y,z,r,'#0000FF')
+        if(rotation === 0){
+          this.createCube(x+5,y,z,r,'#0000FF')
+        }
+        if(rotation === 1){
+          this.createCube(x,y,z+5,r,'#0000FF')
+        }
+        if(rotation === 2){
+          this.createCube(x-5,y,z,r,'#0000FF')
+        }
+        if(rotation === 3){
+          this.createCube(x,y,z-5,r,'#0000FF')
+        }
         y+=5
       } else if(c=="B"){
         c=str
@@ -80,10 +103,18 @@ export default class Webgl {
         y+=5
       }
       else if(c=="-"){
-        r+=Math.PI/2
+        if(rotation ===3){
+          rotation = 0
+        }
+        rotation++
+        //r+=Math.PI/2
       }
       else if(c=="+"){
-        r+=-(Math.PI/2)
+        rotation--
+        if(rotation<0){
+          rotation = 0
+        }
+        //r+=-(Math.PI/2)
       }
     })
   }
