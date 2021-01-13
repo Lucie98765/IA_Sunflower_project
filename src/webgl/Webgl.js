@@ -40,6 +40,7 @@ export default class Webgl {
   }
 
   runKoch(init,n){
+    //pour faire la rotation
     let rotation = 0
     let x =-10
     let y =-10
