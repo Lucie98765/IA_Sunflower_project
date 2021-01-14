@@ -69,6 +69,7 @@ export default class Webgl {
         }
         if(rotation === 1){
           this.createCube(x,y,z+5,r,'#FF0000')
+          this.createCube(x,y,z+10,r,'#FF0000')
         }
         if(rotation === 2){
           this.createCube(x-5,y,z,r,'#FF0000')
