@@ -3,6 +3,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 import { OrbitControls } from './controls/OrbitControls'
 
 import Cube from './objects/Cube'
+import Sunflower from './objects/sunflower/Sunflower'
 
 export default class Webgl {
   constructor() {
@@ -24,19 +25,22 @@ export default class Webgl {
     this.scene.add(this.spotlight)
     this.scene.add(this.spotlight2)
 
-    this.camera.position.z = 100
+    this.camera.position.z = 200
+    this.camera.position.y = 400
 
+    this.sunflower = new Sunflower('sunflower1')
+    
     //Axiome + nombre d'itérations
-    this.runKoch("B",3)
+    this.runKoch("B",4)
 
     this.time = 0
 
     window.addEventListener('resize', this.onResize)
   }
 
-  createCube(x,y,z,r,c){
-    this.line = new Cube(x, y, z, r, c)
-    this.scene.add(this.line)
+  createCube(x,y,z,c){
+    this.cube = new Cube(x, y, z, c)
+    this.scene.add(this.cube)
   }
 
   runKoch(init,n){
@@ -45,9 +49,9 @@ export default class Webgl {
     let x =-10
     let y =-10
     let z=0
-    let r=0
+    //let r=0
     let instruction=init;
-    let str = "TTTF-TTTF-TTTF+TTTS-TB";
+    let str = "TTTF-TTTF-TTTF-TTTS-TB";
     for(let i=0;i<n;i++){
       let tmp=''
       instruction.split('').forEach((c) => {
@@ -63,45 +67,54 @@ export default class Webgl {
     instruction.split('').forEach((c) => {
       if(c=="F"){
         c=str
-        this.createCube(x,y,z,r,'#FF0000')
+        //this.createCube(x,y,z,'#FF0000')
         if(rotation === 0){
-          this.createCube(x+5,y,z,r,'#FF0000')
+          //this.createCube(x+5,y,z,'#FF0000')
+          console.log('coucou')
+          this.sunflower.leaf(x,y,z,this.scene,0,rotation)
         }
         if(rotation === 1){
-          this.createCube(x,y,z+5,r,'#FF0000')
-          this.createCube(x,y,z+10,r,'#FF0000')
+          //this.createCube(x,y,z+5,'#FF0000')
+          //this.createCube(x,y,z+10,'#FF0000')
+          this.sunflower.leaf(x,y,z,this.scene,0,rotation)
         }
         if(rotation === 2){
-          this.createCube(x-5,y,z,r,'#FF0000')
+          //this.createCube(x-5,y,z,'#FF0000')
+          this.sunflower.leaf(x,y,z,this.scene,-2,rotation)
         }
         if(rotation === 3){
-          this.createCube(x,y,z-5,r,'#FF0000')
+          //this.createCube(x,y,z-5,'#FF0000')
+          this.sunflower.leaf(x,y,z,this.scene,-2,rotation)
         }
         /*x+=5*Math.cos(r);*/
         y+=5
       } else if(c=="T"){
         c=str
-        this.createCube(x,y,z,r,'#00FF00')
+        this.createCube(x,y,z,'#00FF00')
         y+=5
       } else if(c=="S"){
         c=str
-        this.createCube(x,y,z,r,'#0000FF')
+        //this.createCube(x,y,z,'#0000FF')
         if(rotation === 0){
-          this.createCube(x+5,y,z,r,'#0000FF')
+          //this.createCube(x+5,y,z,'#0000FF')
+          this.sunflower.flower(x,y,z,this.scene,0,rotation)
         }
         if(rotation === 1){
-          this.createCube(x,y,z+5,r,'#0000FF')
+          //this.createCube(x,y,z+5,'#0000FF')
+          this.sunflower.flower(x,y,z,this.scene,0,rotation)
         }
         if(rotation === 2){
-          this.createCube(x-5,y,z,r,'#0000FF')
+          //this.createCube(x-5,y,z,'#0000FF')
+          this.sunflower.flower(x,y,z,this.scene,-2,rotation)
         }
         if(rotation === 3){
-          this.createCube(x,y,z-5,r,'#0000FF')
+          //this.createCube(x,y,z-5,'#0000FF')
+          this.sunflower.flower(x,y,z,this.scene,-2,rotation)
         }
         y+=5
       } else if(c=="B"){
         c=str
-        this.createCube(x,y,z,r,'#582900')
+        this.createCube(x,y,z,'#582900')
         y+=5
       }
       else if(c=="-"){
