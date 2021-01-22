@@ -1,17 +1,21 @@
+import { Vector3 } from 'three'
 import Cube from '../Cube'
 
 export default class Sunflower {
-    constructor(id){
+    constructor(id,x,y,z){
         this.createCube = this.createCube.bind(this)
-        //this.position = new Vector3(x+rotation*5,y,z)
+        this.flower = this.flower.bind(this)
+        this.leaf = this.leaf.bind(this)
         this.idFlower = id
-        //this.scene = scene
+        this.position = new Vector3(x,y,z)
     }
 
     createCube(x,y,z,c,scene){
         this.cube = new Cube(x, y, z, c)
         this.cube.idFlower = this.idFlower
+        this.cube.trueColor = c
         scene.add(this.cube)
+        this.cube.isSelected = false
     }
 
     flower(x, y, z,scene,coeffRotation,rotation){
@@ -255,5 +259,85 @@ export default class Sunflower {
             
             this.createCube(x,y+20,z+40*(1+coeffRotation),'#00FF00', scene) 
         }    
-    }    
+    }
+    
+    Lsystem(init,n,scene){
+        //pour faire la rotation
+        console.log(scene)
+        let rotation = 0
+        let x =-10
+        let y =-10
+        let z=0
+        x+= this.position.x
+        y+= this.position.y
+        z+= this.position.z
+        //let r=0
+        let instruction=init;
+        let str = "TTTF-TTTS-TTTF-TTTF-TTTS-TB";
+        for(let i=0;i<n;i++){
+          let tmp=''
+          instruction.split('').forEach((c) => {
+            if(c=="B"){
+              tmp+=str
+            }
+            else{
+              tmp+=c
+            }
+          })
+          instruction=tmp;
+        }
+        instruction.split('').forEach((c) => {
+          if(c=="F"){
+            c=str
+            if(rotation === 0){
+              this.leaf(x,y,z,scene,0,rotation)
+            }
+            if(rotation === 1){
+              this.leaf(x,y,z,scene,0,rotation)
+            }
+            if(rotation === 2){
+              this.leaf(x,y,z,scene,-2,rotation)
+            }
+            if(rotation === 3){
+              this.leaf(x,y,z,scene,-2,rotation)
+            }
+            y+=5
+          } else if(c=="T"){
+            c=str
+            this.createCube(x,y,z,'#00FF00',scene)
+            y+=5
+          } else if(c=="S"){
+            c=str
+            if(rotation === 0){
+              this.flower(x,y,z,scene,0,rotation)
+            }
+            if(rotation === 1){
+              this.flower(x,y,z,scene,0,rotation)
+            }
+            if(rotation === 2){
+              this.flower(x,y,z,scene,-2,rotation)
+            }
+            if(rotation === 3){
+              this.flower(x,y,z,scene,-2,rotation)
+            }
+            y+=5
+          } else if(c=="B"){
+            c=str
+            this.createCube(x,y,z,'#582900',scene)
+            y+=5
+          }
+          else if(c=="-"){
+            rotation++
+            if(rotation ===4){
+              rotation = 0
+            }
+          }
+          else if(c=="+"){
+            rotation--
+            if(rotation<0){
+              rotation = 0
+            }
+          }
+        })
+      }
 }
