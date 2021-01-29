@@ -4,16 +4,35 @@
 <head>
   <meta charset="utf-8">
   <title>L-system - Lucie LESBATS & Victorine Maurel</title>
-  <style>
-    body .dg.ac {
-      z-index: 9999 !important;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
   <h1>
-    L-system
+    Jard'IMAC
   </h1>
+  <div id="menu">
+    <button id="planter"> Planter une graine</button>
+    <button id="select">Sélectionner une plante</button>
+    <div id="infoSelected">
+      <h3>État de la plante : <span id="nomPlate"></span></h3>
+      <div id="jauges">
+        <span class="jauge">Jauge d'arrosage <span id="arrosage">10%</span></span>
+        <progress max="100" value="10"> 10% </progress>
+        <span class="jauge">Jauge d'ensoleillement <span id="ensoleillement">20%</span></span>
+        <progress max="100" value="20"> 20% </progress>
+        <span class="jauge">Jauge de croissance <span id="croissance">15%</span></span>
+        <progress max="100" value="15"> 15% </progress>
+      </div>
+      
+      <div id='buttons'>
+        <button>Arroser</button>
+        <button>Ensoleiller</button>
+      </div>
+      <button id="love">♡</button>
+    </div>
+  </div>
 </body>
 </html>
