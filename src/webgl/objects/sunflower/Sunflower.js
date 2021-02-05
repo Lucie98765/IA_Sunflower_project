@@ -8,6 +8,7 @@ export default class Sunflower {
         this.leaf = this.leaf.bind(this)
         this.idFlower = id
         this.position = new Vector3(x,y,z)
+        this.isSelected = false
     }
 
     createCube(x,y,z,c,scene){
@@ -169,6 +170,7 @@ export default class Sunflower {
             this.createCube(x-5,y+10,z+25*(1+coeffRotation),'#3f2204', scene)
         }    
     }
+
     leaf(x, y, z,scene,coeffRotation,rotation){
         this.createCube(x,y,z,'#00FF00', scene)
         if(rotation === 0 || rotation === 2){
@@ -263,7 +265,6 @@ export default class Sunflower {
     
     Lsystem(init,n,scene){
         //pour faire la rotation
-        console.log(scene)
         let rotation = 0
         let x =-10
         let y =-10
@@ -339,5 +340,9 @@ export default class Sunflower {
             }
           }
         })
-      }
+    }
+
+    setIsSelected (isSelected){
+      this.isSelected = isSelected
+    }
 }

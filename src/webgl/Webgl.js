@@ -25,21 +25,22 @@ export default class Webgl {
     this.spotlight = new SpotLight( 0xffffff, 1 )
     this.spotlight.position.set(200, 200, 200)
     this.scene.add(this.spotlight)
-    this.scene.add(this.spotlight2)
 
     this.camera.position.z = 200
     this.camera.position.y = 400
 
     this.raycaster = new Raycaster()
     this.mouse = new Vector2()
+
+    this.allFlower = []
     this.sunflower = new Sunflower('sunflower1',0,0,0)
+    this.allFlower.push(this.sunflower)
     this.sunflower2 = new Sunflower('sunflower2',100,0,0)
+    this.allFlower.push(this.sunflower2)
     
     //Axiome + nombre d'itérations
     this.sunflower.Lsystem("B",2,this.scene)
-
     this.sunflower2.Lsystem("B",2,this.scene)
-    console.log(this.scene)
 
     this.time = 0
     window.addEventListener('resize', this.onResize)
@@ -48,11 +49,7 @@ export default class Webgl {
 
   }
   
-  onMouseMove( event ) {
-
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-  
+  onMouseMove( event ) {  
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   
@@ -61,23 +58,35 @@ export default class Webgl {
     this.raycaster.setFromCamera( this.mouse, this.camera )
     // calculate objects intersecting the picking ray
     const intersects = this.raycaster.intersectObjects( this.scene.children )
-
+    let id = ''
+    let info = ''
     for ( let i = 0; i < intersects.length; i ++ ) {
-      const id = intersects[ i ].object.idFlower
-      console.log('L\'élément ' + id +' est sélectionné')
+      id = intersects[ i ].object.idFlower
       this.scene.children.forEach(element => {
         if(element.idFlower === id){
           if(element.isSelected){
             element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
             element.isSelected = false
+            info = 'unselected'
           }
           else{
             element.material.color.set( 0xff0000 )
             element.isSelected = true
+            info = 'selected'
           }
         }
       })
     }
+    this.allFlower.forEach(element => {
+      if(element.idFlower === id){
+        if (info === 'selected'){
+          element.setIsSelected(true)
+        }
+        else{
+          element.setIsSelected(false)
+        }
+      }
+    })
   }
   onResize () {
     this.camera.aspect = window.innerWidth / window.innerHeight
