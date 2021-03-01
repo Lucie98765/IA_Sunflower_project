@@ -9,10 +9,15 @@ export default class Sunflower {
         this.idFlower = id
         this.position = new Vector3(x,y,z)
         this.isSelected = false
+
+        this.wateringLevel = 10
+        this.sunshineLevel = 10
+        this.growthLevel = 0
     }
 
     createCube(x,y,z,c,scene){
         this.cube = new Cube(x, y, z, c)
+        this.cube.type = 'flower'
         this.cube.idFlower = this.idFlower
         this.cube.trueColor = c
         scene.add(this.cube)

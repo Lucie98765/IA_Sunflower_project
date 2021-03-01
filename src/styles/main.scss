@@ -7,6 +7,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   position: relative;
+  background-color: #a9cfe3;
 
   button{
     font-family: 'Viga', sans-serif;
@@ -15,12 +16,14 @@ html, body {
     font-size: large;
     padding: 2%;
     border-radius: 10px;
+    border-color:  #FFF599;
+    border-style: solid;
   }
   button:hover{
     color:  #FFF599;
     border-color:  #FFF599;
     border-style: solid;
-    background-color:rgba(255, 255, 252, 0.5);
+    background-color:rgba(255, 255, 252, 0);
   }
 }
 progress {
@@ -41,7 +44,7 @@ canvas {
 }
 
 h1 {
-  z-index: 1;
+  z-index: 4;
   position: relative;
   pointer-events: none;
   margin-left: 4%;
@@ -65,7 +68,8 @@ h1 {
       margin: 3% auto;
   }
   #infoSelected{
-    background-color:rgba(255, 255, 252, 0.5);
+    //background-color:rgba(255, 255, 252, 0.5);
+    background-color: #a9cfe3;
     border-color:  #FFF599;
     color: #FFF599;
     border-style: solid;
@@ -98,6 +102,42 @@ h1 {
       margin-bottom: 5%;
     }
   }
-
+  .selected{
+    color:  #FFF599;
+    border-color:  #FFF599;
+    border-style: solid;
+    background-color:rgba(255, 255, 252, 0.5);
+  }
+  .hidden{
+    display: none;
+  }
+}
+#popup {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  border-color:  #FFF599;
+  border-style: solid;
+  color:  #FFF599;
+  border-radius: 10px;
+  padding: 2%;
+  width: 40vw;
+  height: 20vh;
+  text-align: center;
+  .hidden{
+    display: none;
+  }
+}
+#blue{
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #a9cfe3;
+  z-index: 3;
 }
 

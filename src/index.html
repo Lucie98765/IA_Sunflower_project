@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>L-system - Lucie LESBATS & Victorine Maurel</title>
+  <title>Jard'IMAC - Lucie LESBATS & Victorine Maurel</title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Viga&display=swap" rel="stylesheet">
 
@@ -13,18 +13,23 @@
   <h1>
     Jard'IMAC
   </h1>
+  <div id="blue"></div>
+  <div id="popup">
+    <h2>Pour lancer la partie appuyer sur le bouton start</h2>
+    <button>Start</button>
+  </div>
   <div id="menu">
+    <span>Cliquez sur une plante pour connaitre son état.</span>
     <button id="plant"> Planter une graine</button>
-    <button id="select">Sélectionner une plante</button>
-    <div id="infoSelected">
+    <div id="infoSelected" class="hidden">
       <h3>État de la plante : <span id="flowerName"></span></h3>
       <div id="jauges">
-        <span class="jauge">Jauge d'arrosage <span id="arrosage">10%</span></span>
-        <progress max="100" value="10"> 10% </progress>
-        <span class="jauge">Jauge d'ensoleillement <span id="ensoleillement">20%</span></span>
-        <progress max="100" value="20"> 20% </progress>
-        <span class="jauge">Jauge de croissance <span id="croissance">15%</span></span>
-        <progress max="100" value="15"> 15% </progress>
+        <span class="jauge">Jauge d'arrosage <span id="watering">0%</span></span>
+        <progress max="100" value="0" id="wateringLevel"> 0% </progress>
+        <span class="jauge">Jauge d'ensoleillement <span id="sunshine">0%</span></span>
+        <progress max="100" value="0" id="sunshineLevel"> 0% </progress>
+        <span class="jauge">Jauge de croissance <span id="growth">0%</span></span>
+        <progress max="100" value="0" id="growthLevel"> 0% </progress>
       </div>
       
       <div id='buttons'>
