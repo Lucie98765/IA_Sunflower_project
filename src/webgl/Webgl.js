@@ -50,6 +50,7 @@ export default class Webgl {
     this.sunflower = new Sunflower('sunflower1',0,0,0)
     this.allFlowers.push(this.sunflower)
     this.sunflower2 = new Sunflower('sunflower2',100,0,0)
+    this.sunflower2.wateringLevel = 50
     this.allFlowers.push(this.sunflower2)
     
     //Axiome + nombre d'itérations
@@ -66,7 +67,9 @@ export default class Webgl {
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
   select(event){
-    this.deselectFlowers()
+    if(this.currentlySelected != null){
+      this.deselectFlowers()
+    }
     this.raycaster.setFromCamera( this.mouse, this.camera )
     // calculate objects intersecting the picking ray
     const intersects = this.raycaster.intersectObjects( this.scene.children )
@@ -78,10 +81,14 @@ export default class Webgl {
       currentFlowerOnScene = this.elementOnScene(id)
       type = intersects[ i ].object.type
     }
+    if(this.currentlySelected === id ){
+      currentFlowerOnScene.forEach(element => {
+        element.isSelected = true
+      })
+    }
     this.currentlySelected = id
     const flower = this.flowerInFlowers(id)
     if(type === 'flower'){
-      flower.setIsSelected(true)
       document.querySelector('#infoSelected').classList.remove('hidden')
       document.querySelector('#wateringLevel').value = flower.wateringLevel
       document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
@@ -94,9 +101,16 @@ export default class Webgl {
         if(element.isSelected != true){
           element.material.color.set( 0xff0000 )
           element.isSelected = true
+        } else {
+          element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
+          element.isSelected = false
+          document.querySelector('#infoSelected').classList.add('hidden')
+          this.currentlySelected = null
         }
       })
-    }  
+    } else {
+      this.currentlySelected = null
+    }
   }
   deselectFlowers () {
     this.scene.children.forEach(element => {
