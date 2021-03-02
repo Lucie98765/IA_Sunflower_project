@@ -14,6 +14,7 @@ export default class Webgl {
     this.elementOnScene = this.elementOnScene.bind(this)
     this.flowerInFlowers = this.flowerInFlowers.bind(this)
     this.deselectFlowers = this.deselectFlowers.bind(this)
+    this.plantSeed = this.plantSeed.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -40,11 +41,17 @@ export default class Webgl {
 
     this.currentlySelected = null
 
-    const geometry = new BoxGeometry( 500, 40, 500 )
-    const material = new MeshBasicMaterial( {color: 0x85bea0} )
-    const ground = new Mesh( geometry, material )
-    ground.position.y -= 20 
-    this.scene.add( ground )
+    let geometry = new BoxGeometry( 500, 40, 500 )
+    let material = new MeshBasicMaterial( {color: 0x85bea0} )
+    this.ground = new Mesh( geometry, material )
+    this.ground.position.y = -30
+    this.ground.name = 'ground'
+    this.scene.add( this.ground )
+
+    
+    //this.scene.add( seed )
+
+    //console.log(this.scene)
 
     this.allFlowers = []
     this.sunflower = new Sunflower('sunflower1',0,0,0)
@@ -61,8 +68,9 @@ export default class Webgl {
     window.addEventListener('resize', this.onResize)
     window.addEventListener( 'mousemove', this.onMouseMove, false )
     window.addEventListener( 'click', this.select, false )
+    document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
   }
-  onMouseMove( event ) {  
+  onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
@@ -139,6 +147,29 @@ export default class Webgl {
       }
     })
     return currentFlower
+  }
+  plantSeed(){
+    document.body.classList.toggle('plantSeed')
+    document.querySelector('#plant').classList.toggle('selected')
+    console.log(document.querySelector('#plant').classList.value)
+    window.addEventListener( 'click', () => {
+      if(document.querySelector('#plant').classList.value === 'selected'){
+        this.raycaster.setFromCamera( this.mouse, this.camera )
+        const intersects = this.raycaster.intersectObjects( this.scene.children )
+        for ( let i = 0; i < intersects.length; i ++ ) {
+          if(intersects[ i ].object.name === 'ground'){
+            const geometry = new BoxGeometry( 10, 10, 10 )
+            const material = new MeshBasicMaterial( {color: 0xff0000} )
+            let seed = new Mesh( geometry, material )
+            seed.name = 'seed'
+            seed.position.x= intersects[ i ].point.x
+            seed.position.y= -5
+            seed.position.z= intersects[ i ].point.z
+            this.scene.add(seed)
+          }
+        }
+      }  
+    }, false )
   }
   onResize () {
     this.camera.aspect = window.innerWidth / window.innerHeight

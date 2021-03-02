@@ -18,6 +18,13 @@ html, body {
     border-radius: 10px;
     border-color:  #FFF599;
     border-style: solid;
+
+    .selected {
+      color:  #FFF599;
+      border-color:  #FFF599;
+      border-style: solid;
+      background-color:rgba(255, 255, 252, 0);
+    }
   }
   button:hover{
     color:  #FFF599;
@@ -140,4 +147,6 @@ h1 {
   background-color: #a9cfe3;
   z-index: 3;
 }
-
+.plantSeed{
+  cursor: pointer;
+}
