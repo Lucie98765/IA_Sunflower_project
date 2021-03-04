@@ -151,7 +151,6 @@ export default class Webgl {
   plantSeed(){
     document.body.classList.toggle('plantSeed')
     document.querySelector('#plant').classList.toggle('selected')
-    console.log(document.querySelector('#plant').classList.value)
     window.addEventListener( 'click', () => {
       if(document.querySelector('#plant').classList.value === 'selected'){
         this.raycaster.setFromCamera( this.mouse, this.camera )
