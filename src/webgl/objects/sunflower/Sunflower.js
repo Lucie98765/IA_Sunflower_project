@@ -13,14 +13,16 @@ export default class Sunflower {
         this.wateringLevel = 10
         this.sunshineLevel = 10
         this.growthLevel = 0
+
+        this.grid = new Array()
     }
 
     createCube(x,y,z,c,scene){
-        this.cube = new Cube(x, y, z, c)
-        this.cube.type = 'flower'
+        this.cube = new Cube(x, y, z, c, false)
         this.cube.idFlower = this.idFlower
         this.cube.trueColor = c
         scene.add(this.cube)
+        this.grid.push(this.cube)
         this.cube.isSelected = false
     }
 

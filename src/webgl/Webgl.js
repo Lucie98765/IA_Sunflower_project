@@ -69,6 +69,26 @@ export default class Webgl {
     window.addEventListener( 'mousemove', this.onMouseMove, false )
     window.addEventListener( 'click', this.select, false )
     document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
+
+    const play_gol = document.getElementById('bouton_jeu_vie');
+    play_gol.addEventListener('click', this.launchSimulation(this.sunflower)) // ça se lance sans le clic je sais pas pourquoi 
+
+  }
+
+  launchSimulation (sunflower) {
+    console.log('launchSimulation : ')
+    console.log(sunflower.grid[6])
+    /* sunflower.grid[6].material.color.set( 0x0000FF ) // quand on sélectionne puis déselectionne la plance 
+    sunflower.grid[5].material.color.set( 0x0000FF )
+    sunflower.grid[7].material.color.set( 0x0000FF )
+    sunflower.grid[8].material.color.set( 0x0000FF )
+    sunflower.grid[9].material.color.set( 0x0000FF )
+    */
+    sunflower.grid[6].ill = true // quand on sélectionne puis déselectionne la plance 
+    sunflower.grid[5].ill = true
+    sunflower.grid[7].ill = true
+    sunflower.grid[8].ill = true
+    sunflower.grid[9].ill = true
   }
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
