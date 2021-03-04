@@ -18,6 +18,8 @@ export default class Webgl {
     this.water =this.water.bind(this)
     this.sun =this.sun.bind(this)
     this.update = this.update.bind(this)
+    this.updateSunshineLevel = this.updateSunshineLevel.bind(this)
+    this.updateWateringLevel = this.updateWateringLevel.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -131,10 +133,8 @@ export default class Webgl {
     if(type === 'flower'){
       document.querySelector('#infoSelected').classList.remove('hidden')
       document.querySelector('#flowerName').innerHTML = flower.idFlower
-      document.querySelector('#wateringLevel').value = flower.wateringLevel
-      document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
-      document.querySelector('#sunshineLevel').value = flower.sunshineLevel
-      document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+      this.updateSunshineLevel(flower)
+      this.updateWateringLevel(flower)
       document.querySelector('#growthLevel').value = flower.growthLevel
       document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
 
@@ -166,18 +166,18 @@ export default class Webgl {
   water() {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
-    currentFlower.wateringLevel += 5
-    //console.log(currentFlower.wateringLevel)
-    document.querySelector('#wateringLevel').value = currentFlower.wateringLevel
-    document.querySelector('#watering').innerHTML = currentFlower.wateringLevel + '%'
+    if(currentFlower.wateringLevel < 100){
+      currentFlower.wateringLevel += 5
+    }
+    this.updateWateringLevel(currentFlower)
   }
   sun() {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
-    currentFlower.sunshineLevel += 5
-    //console.log(currentFlower.sunshineLevel)
-    document.querySelector('#sunshineLevel').value = currentFlower.sunshineLevel
-    document.querySelector('#sunshine').innerHTML = currentFlower.sunshineLevel + '%'
+    if(currentFlower.sunshineLevel < 100){
+      currentFlower.sunshineLevel += 5
+    }
+    this.updateSunshineLevel(currentFlower)
   }
   elementOnScene (idElement) {
     let elements = []
@@ -226,7 +226,7 @@ export default class Webgl {
   }
   update(){
     this.allFlowers.forEach( flower => {
-      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)%3 ===0){
+      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)%6 ===0){
         if(flower.wateringLevel > 0 ){
           flower.wateringLevel -= 5
         }
@@ -234,13 +234,39 @@ export default class Webgl {
           flower.sunshineLevel -= 5
         }
         if(this.currentlySelected === flower.idFlower){
-          document.querySelector('#wateringLevel').value = flower.wateringLevel
-          document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
-          document.querySelector('#sunshineLevel').value = flower.sunshineLevel
-          document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+          this.updateWateringLevel(flower)
+          this.updateSunshineLevel(flower)
         }
       }
     })
+  }
+  updateSunshineLevel(flower){
+    document.querySelector('#sunshineLevel').value = flower.sunshineLevel
+    document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+    if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90){
+      document.querySelector('#sunshineLevel').classList.add('ill')
+    } else{
+      document.querySelector('#sunshineLevel').classList.remove('ill')
+    }
+    if(flower.sunshineLevel <= 80 && flower.sunshineLevel >= 60){
+      document.querySelector('#sunshineLevel').classList.add('good')
+    }else{
+      document.querySelector('#sunshineLevel').classList.remove('good')
+    }
+  }
+  updateWateringLevel(flower){
+    document.querySelector('#wateringLevel').value = flower.wateringLevel
+    document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
+    if(flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
+      document.querySelector('#wateringLevel').classList.add('ill')
+    } else{
+      document.querySelector('#wateringLevel').classList.remove('ill')
+    }
+    if(flower.wateringLevel <= 80 && flower.wateringLevel >= 60){
+      document.querySelector('#wateringLevel').classList.add('good')
+    }else{
+      document.querySelector('#wateringLevel').classList.remove('good')
+    }
   }
   start () {
     requestAnimationFrame( this.start )
