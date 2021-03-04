@@ -19,6 +19,7 @@ export default class Sunflower {
 
     createCube(x,y,z,c,scene){
         this.cube = new Cube(x, y, z, c, false)
+        this.cube.type = 'flower'
         this.cube.idFlower = this.idFlower
         this.cube.trueColor = c
         scene.add(this.cube)
