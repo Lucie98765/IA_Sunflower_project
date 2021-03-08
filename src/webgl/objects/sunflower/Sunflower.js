@@ -1,11 +1,21 @@
 import { Vector3 } from 'three'
 import Cube from '../Cube'
+import Webgl from '../../Webgl'
+
+const sentences = [
+  ['TTT-B','TTTF-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TTTF-TTTS-TB'],
+  ['TTT-B','TTFT-TTTT-TFTT--TB','TTFT-TSTT-TFTT-TFTT-TSTT-TB'],
+  ['TTT-B','TFTT-TTTTT-TTTFT-TB','TFTT-TTTTS-TTTFT-TTTTS-TTTTF-TB'],
+  ['TTT-B','TF-TF-TT-TB','TF-TS-TT-TS-TF-TB']
+]
 
 export default class Sunflower {
-    constructor(id,x,y,z,creationTime){
+    constructor(id,x,y,z,creationTime,funct){
         this.createCube = this.createCube.bind(this)
         this.flower = this.flower.bind(this)
         this.leaf = this.leaf.bind(this)
+        this.isGrowing = this.isGrowing.bind(this)
+
         this.idFlower = id
         this.position = new Vector3(x,y,z)
         this.isSelected = false
@@ -17,6 +27,14 @@ export default class Sunflower {
         this.growthLevel = 0
 
         this.grid = new Array()
+        const min=0 
+        const max=4 
+        const random = Math.random() * (max - min) + min
+        console.log(Math.floor(random))
+        this.string = sentences[Math.floor(random)]
+
+        this.state = 0
+        setInterval(this.isGrowing, 5000)
     }
 
     createCube(x,y,z,c,scene){
@@ -272,8 +290,18 @@ export default class Sunflower {
             this.createCube(x,y+20,z+40*(1+coeffRotation),'#00FF00', scene) 
         }    
     }
-    
+    //"TTTF-TTTS-TTTF-TTTF-TTTS-TB"
     Lsystem(init,n,scene){
+      let string = ""
+        if(this.state === 0 ){
+          string = this.string[0]
+        }
+        if(this.state === 1 ){
+          string = this.string[1]
+        }
+        if(this.state === 2 ){
+          string = this.string[2]
+        }
         //pour faire la rotation
         let rotation = 0
         let x =-10
@@ -284,7 +312,7 @@ export default class Sunflower {
         z+= this.position.z
         //let r=0
         let instruction=init;
-        let str = "TTTF-TTTS-TTTF-TTTF-TTTS-TB";
+        let str = string
         for(let i=0;i<n;i++){
           let tmp=''
           instruction.split('').forEach((c) => {
@@ -354,5 +382,16 @@ export default class Sunflower {
 
     setIsSelected (isSelected){
       this.isSelected = isSelected
+    }
+    isGrowing(){
+      if (this.sunshineLevel <= 80 && this.sunshineLevel >= 60){
+        if(this.wateringLevel <= 80 && this.wateringLevel >= 60){
+          if(this.growthLevel < 100){
+            this.growthLevel += 5
+            document.querySelector('#growthLevel').value = this.growthLevel
+            document.querySelector('#growth').innerHTML = this.growthLevel + '%'
+          }
+        }
+      }
     }
 }
