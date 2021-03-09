@@ -10,7 +10,7 @@ const sentences = [
 ]
 
 export default class Sunflower {
-    constructor(id,x,y,z,creationTime,funct){
+    constructor(id,x,y,z,creationTime,scene){
         this.createCube = this.createCube.bind(this)
         this.flower = this.flower.bind(this)
         this.leaf = this.leaf.bind(this)

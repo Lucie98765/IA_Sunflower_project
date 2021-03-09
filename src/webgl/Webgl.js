@@ -218,6 +218,7 @@ export default class Webgl {
         for ( let i = 0; i < intersects.length; i ++ ) {
           if(intersects[ i ].object.name === 'ground'){
             let sunflower = new Sunflower('sunflower'+this.nbSunFlower,intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+            this.nextState(sunflower)
             this.allFlowers.push(sunflower)
             this.nbSunFlower++
             sunflower.Lsystem("B",1,this.scene)
@@ -304,30 +305,39 @@ export default class Webgl {
       flower.state = 2
     }
     if(flower.growthLevel >=5 && flower.growthLevel<10){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",1,this.scene)
     }
     if(flower.growthLevel >=10 && flower.growthLevel<15){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=15 && flower.growthLevel<20){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
     if(flower.growthLevel >=20 && flower.growthLevel<25){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",1,this.scene)
     }
     if(flower.growthLevel >=25 && flower.growthLevel<35){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=35 && flower.growthLevel<50){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
     if(flower.growthLevel >=50 && flower.growthLevel<70){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
     if(flower.growthLevel >=70 && flower.growthLevel<90){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",4,this.scene)
     }
     if(flower.growthLevel >=90 && flower.growthLevel<100){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",5,this.scene)
     }
   }
@@ -338,9 +348,9 @@ export default class Webgl {
     //this.globalTime = this.trueTime + this.delta
     
     document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
-    this.allFlowers.forEach( flower =>{
+    /* this.allFlowers.forEach( flower =>{
       this.nextState(flower)
-    })
+    }) */
 
     this.controls.update()
 	  this.renderer.render( this.scene, this.camera )
