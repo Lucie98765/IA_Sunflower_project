@@ -70,30 +70,62 @@ export default class Webgl {
     window.addEventListener( 'click', this.select, false )
     document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
 
-    const play_gol = document.getElementById('bouton_jeu_vie');
-    play_gol.addEventListener('click', this.launchSimulation(this.sunflower)) // ça se lance sans le clic je sais pas pourquoi 
+    // A appeler en boucle quand les jauges sont mauvaises 
+    let illFlower = this.elementOnScene("sunflower1")
+    const max = illFlower.length
+    //const illCube = Math.floor(Math.random() * (max - 10) + 10)
+    illFlower[max-1].setIll(true)
+    let i = 0;
+    const illInterval = setInterval ( () => {
+      this.spreadIllness("sunflower1", max)
+      i++
+      if(i>40) {
+        clearInterval(illInterval)
+        this.recover("sunflower1", max)
+      }
+    }, 500 )
 
   }
 
-  launchSimulation (sunflower) {
-    console.log('launchSimulation : ')
-    console.log(sunflower.grid[6])
-    /* sunflower.grid[6].material.color.set( 0x0000FF ) // quand on sélectionne puis déselectionne la plance 
-    sunflower.grid[5].material.color.set( 0x0000FF )
-    sunflower.grid[7].material.color.set( 0x0000FF )
-    sunflower.grid[8].material.color.set( 0x0000FF )
-    sunflower.grid[9].material.color.set( 0x0000FF )
-    */
-    sunflower.grid[6].ill = true // quand on sélectionne puis déselectionne la plance 
-    sunflower.grid[5].ill = true
-    sunflower.grid[7].ill = true
-    sunflower.grid[8].ill = true
-    sunflower.grid[9].ill = true
+  spreadIllness (flowerId, max) {
+    let flowerElements = this.elementOnScene(flowerId)
+    for (let k = 0; k < max; k++) {
+      let illNeighbour = 0
+      for(let j = -5; j <6; j++){
+        if ((k + j >= 0) && (k + j < max) && j!=k ){ // pour ne pas sortir du tableau + ne pas comptabiliser le cube malade comme un voisin malade
+          if(flowerElements[k + j].ill) {
+            illNeighbour = illNeighbour + 1
+          }
+        }
+      }
+      if (illNeighbour >= 1 && illNeighbour <= 8){
+        flowerElements[k].setIll(true)
+      }
+      
+      if (illNeighbour > 9){
+        flowerElements[k].setIll(false)
+      }
+    }
   }
+
+  // A revoir
+  recover (flowerId, max) {
+    let flowerElements = this.elementOnScene(flowerId)
+    for(let i = 0; i<max; i++){
+      if(flowerElements[i].ill) {
+        setTimeout( () => {
+          flowerElements[i].setIll(false)
+        }, 500 )
+      }
+    }
+  }
+
+  
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
+  
   select(event){
     if(this.currentlySelected != null){
       this.deselectFlowers()
@@ -134,21 +166,30 @@ export default class Webgl {
           element.isSelected = false
           document.querySelector('#infoSelected').classList.add('hidden')
           this.currentlySelected = null
+          if(element.ill) {
+            element.material.color.set("#211a01") // change color if ill
+          } 
         }
       })
     } else {
       this.currentlySelected = null
     }
   }
+  
   deselectFlowers () {
     this.scene.children.forEach(element => {
       if(element.type === 'flower'){
         element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
         element.isSelected = false
         document.querySelector('#infoSelected').classList.add('hidden')
+        if(element.ill) { // change color if ill
+          element.material.color.set("#211a01")
+        } 
       }
     })
-    this.allFlowers.forEach(flower => flower.isSelected = false)
+    this.allFlowers.forEach(flower => {
+      flower.isSelected = false
+    })
   }
   elementOnScene (idElement) {
     let elements = []
