@@ -358,29 +358,21 @@ export default class Webgl {
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
-    if(flower.growthLevel >=20 && flower.growthLevel<25){
+    if(flower.growthLevel >=20 && flower.growthLevel<35){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",1,this.scene)
     }
-    if(flower.growthLevel >=25 && flower.growthLevel<35){
+    if(flower.growthLevel >=35 && flower.growthLevel<50){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",2,this.scene)
     }
-    if(flower.growthLevel >=35 && flower.growthLevel<50){
-      this.removeElement(flower.idFlower)
-      flower.Lsystem("B",3,this.scene)
-    }
     if(flower.growthLevel >=50 && flower.growthLevel<70){
       this.removeElement(flower.idFlower)
+      flower.Lsystem("B",2,this.scene)
+    }
+    if(flower.growthLevel >=70 && flower.growthLevel<100){
+      this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
-    }
-    if(flower.growthLevel >=70 && flower.growthLevel<90){
-      this.removeElement(flower.idFlower)
-      flower.Lsystem("B",4,this.scene)
-    }
-    if(flower.growthLevel >=90 && flower.growthLevel<100){
-      this.removeElement(flower.idFlower)
-      flower.Lsystem("B",5,this.scene)
     }
   }
   start () {
