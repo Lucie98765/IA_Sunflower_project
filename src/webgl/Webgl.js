@@ -96,6 +96,7 @@ export default class Webgl {
     // A appeler en boucle quand les jauges sont mauvaises 
     let illFlower = this.elementOnScene("sunflower0")
     const max = illFlower.length
+    
     //const illCube = Math.floor(Math.random() * (max - 10) + 10)
     illFlower[max-1].setIll(true)
     let i = 0;
