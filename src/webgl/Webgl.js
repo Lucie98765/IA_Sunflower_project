@@ -348,9 +348,9 @@ export default class Webgl {
     //this.globalTime = this.trueTime + this.delta
     
     document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
-    /* this.allFlowers.forEach( flower =>{
+    this.allFlowers.forEach( flower =>{
       this.nextState(flower)
-    }) */
+    })
 
     this.controls.update()
 	  this.renderer.render( this.scene, this.camera )
