@@ -20,8 +20,14 @@
   </div>
   <div id="menu">
     <span id="timer"></span>
-    <span>Cliquez sur une plante pour connaitre son état.</span>
+    <div class='buttons timeManagement'>
+      <h3>Vitesse de la simulation : </h3>
+      <button>Lente</button>
+      <button>Normale</button>
+      <button>Rapide</button>
+    </div>
     <button id="plant"> Planter une graine</button>
+    <span>Cliquez sur une plante pour connaitre son état.</span>
     <div id="infoSelected" class="hidden">
       <h3>État de la plante : <span id="flowerName"></span></h3>
       <div id="jauges">
@@ -33,7 +39,7 @@
         <progress max="100" value="0" id="growthLevel"> 0% </progress>
       </div>
       
-      <div id='buttons'>
+      <div class='buttons'>
         <button id="water">Arroser</button>
         <button id="sun">Ensoleiller</button>
       </div>

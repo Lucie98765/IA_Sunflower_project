@@ -42,6 +42,12 @@ progress {
 progress::-webkit-progress-value {
   background: white; 
 }
+progress.ill::-webkit-progress-value {
+  background-color: red;
+}
+progress.good::-webkit-progress-value {
+  background-color:green;
+}
 canvas {
   position: absolute;
   top: 0;

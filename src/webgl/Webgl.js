@@ -18,6 +18,11 @@ export default class Webgl {
     this.water =this.water.bind(this)
     this.sun =this.sun.bind(this)
     this.update = this.update.bind(this)
+    this.updateSunshineLevel = this.updateSunshineLevel.bind(this)
+    this.updateWateringLevel = this.updateWateringLevel.bind(this)
+    this.timeManagement = this.timeManagement.bind(this)
+    this.removeElement = this.removeElement.bind(this)
+    this.nextState = this.nextState.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -37,7 +42,10 @@ export default class Webgl {
 
     this.clock = new Clock()
     this.clock.start()
-    this.delta = 0
+    //this.delta = 0
+    //this.globalTime = this.clock.getElapsedTime()
+    //this.trueTime = 0
+    this.timeCoeff = 1
 
     this.camera.position.x = 260
     this.camera.position.y = 400
@@ -55,25 +63,24 @@ export default class Webgl {
     this.ground.name = 'ground'
     this.scene.add( this.ground )
 
-    
-    //this.scene.add( seed )
-
-    //console.log(this.scene)
-
     this.allFlowers = []
-    this.sunflower = new Sunflower('sunflower1',0,0,0,this.clock.getElapsedTime())
+    this.nbSunFlower = 0
+    this.sunflower = new Sunflower('sunflower'+this.nbSunFlower,0,0,0,this.clock.getElapsedTime())
     this.allFlowers.push(this.sunflower)
-    this.sunflower2 = new Sunflower('sunflower2',100,0,0,this.clock.getElapsedTime())
+    /*this.nbSunFlower++
+    this.sunflower2 = new Sunflower('sunflower'+this.nbSunFlower,100,0,0,this.clock.getElapsedTime())
+    this.nbSunFlower++
     this.sunflower2.wateringLevel = 50
-    this.allFlowers.push(this.sunflower2)
+    this.allFlowers.push(this.sunflower2) */
     
     //Axiome + nombre d'itérations
-    this.sunflower.Lsystem("B",2,this.scene)
-    this.sunflower2.Lsystem("B",2,this.scene)
+    this.sunflower.state = 2
+    this.sunflower.Lsystem("B",3,this.scene)
+    //this.sunflower2.state = 2
+    //this.sunflower2.Lsystem("B",4,this.scene)
 
     setInterval(this.update, 1000)
 
-    this.time = 0
     window.addEventListener('resize', this.onResize)
     window.addEventListener( 'mousemove', this.onMouseMove, false )
     document.querySelector('canvas').addEventListener( 'click', this.select, false )
@@ -82,20 +89,20 @@ export default class Webgl {
     document.querySelector('#water').addEventListener('click',this.water,false)
     document.querySelector('#sun').addEventListener('click',this.sun,false)
 
-    const play_gol = document.getElementById('bouton_jeu_vie')
-    play_gol.addEventListener('click', this.launchSimulation(this.sunflower)) // ça se lance sans le clic je sais pas pourquoi 
+    document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
+    this.i = 0
     // A appeler en boucle quand les jauges sont mauvaises 
-    let illFlower = this.elementOnScene("sunflower1")
+    let illFlower = this.elementOnScene("sunflower0")
     const max = illFlower.length
     //const illCube = Math.floor(Math.random() * (max - 10) + 10)
     illFlower[max-1].setIll(true)
     let i = 0;
     const illInterval = setInterval ( () => {
-      this.spreadIllness("sunflower1", max)
+      this.spreadIllness("sunflower0", max)
       i++
       if(i>40) {
         clearInterval(illInterval)
-        this.recover("sunflower1", max)
+        this.recover("sunflower0", max)
       }
     }, 500 )
 
@@ -120,8 +127,7 @@ export default class Webgl {
         flowerElements[k].setIll(false)
       }
     }
-  }
-
+  }  
   // A revoir
   recover (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
@@ -147,49 +153,48 @@ export default class Webgl {
     this.raycaster.setFromCamera( this.mouse, this.camera )
     // calculate objects intersecting the picking ray
     const intersects = this.raycaster.intersectObjects( this.scene.children )
-    let id = ''
-    let currentFlowerOnScene = ''
-    let type = ''
-    for ( let i = 0; i < intersects.length; i ++ ) {
-      id = intersects[ i ].object.idFlower
+    let id = null
+    let currentFlowerOnScene = null
+    let type = null
+    if(typeof intersects[0] === 'object'){
+      id = intersects[0].object.idFlower
       currentFlowerOnScene = this.elementOnScene(id)
-      type = intersects[ i ].object.type
-    }
-    if(this.currentlySelected === id ){
-      currentFlowerOnScene.forEach(element => {
-        element.isSelected = true
-      })
-    }
-    this.currentlySelected = id
-    const flower = this.flowerInFlowers(id)
-    if(type === 'flower'){
-      document.querySelector('#infoSelected').classList.remove('hidden')
-      document.querySelector('#flowerName').innerHTML = flower.idFlower
-      document.querySelector('#wateringLevel').value = flower.wateringLevel
-      document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
-      document.querySelector('#sunshineLevel').value = flower.sunshineLevel
-      document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
-      document.querySelector('#growthLevel').value = flower.growthLevel
-      document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
-
-      currentFlowerOnScene.forEach( element => {
-        if(element.isSelected != true){
-          element.material.color.set( 0xff0000 )
+      type = intersects[0].object.type
+      if(this.currentlySelected === id ){
+        currentFlowerOnScene.forEach(element => {
           element.isSelected = true
-        } else {
-          element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
-          element.isSelected = false
-          document.querySelector('#infoSelected').classList.add('hidden')
-          this.currentlySelected = null
-          if(element.ill) {
-            element.material.color.set("#211a01") // change color if ill
-          } 
-        }
-      })
-    } else {
-      this.currentlySelected = null
+        })
+      }
+      this.currentlySelected = id
+      const flower = this.flowerInFlowers(id)
+      if(type === 'flower'){
+        document.querySelector('#infoSelected').classList.remove('hidden')
+        document.querySelector('#flowerName').innerHTML = flower.idFlower
+        this.updateSunshineLevel(flower)
+        this.updateWateringLevel(flower)
+        document.querySelector('#growthLevel').value = flower.growthLevel
+        document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
+  
+        currentFlowerOnScene.forEach( element => {
+          if(element.isSelected != true){
+            element.material.color.set( 0xff0000 )
+            element.isSelected = true
+          } else {
+            element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
+            element.isSelected = false
+            document.querySelector('#infoSelected').classList.add('hidden')
+            this.currentlySelected = null
+            if(element.ill) {
+              element.material.color.set("#211a01") // change color if ill
+            } 
+          }
+        })
+      } else {
+        this.currentlySelected = null
+      }
     }
   }
+  
   
   deselectFlowers () {
     this.scene.children.forEach(element => {
@@ -209,18 +214,18 @@ export default class Webgl {
   water() {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
-    currentFlower.wateringLevel += 5
-    //console.log(currentFlower.wateringLevel)
-    document.querySelector('#wateringLevel').value = currentFlower.wateringLevel
-    document.querySelector('#watering').innerHTML = currentFlower.wateringLevel + '%'
+    if(currentFlower.wateringLevel < 100){
+      currentFlower.wateringLevel += 5
+    }
+    this.updateWateringLevel(currentFlower)
   }
   sun() {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
-    currentFlower.sunshineLevel += 5
-    //console.log(currentFlower.sunshineLevel)
-    document.querySelector('#sunshineLevel').value = currentFlower.sunshineLevel
-    document.querySelector('#sunshine').innerHTML = currentFlower.sunshineLevel + '%'
+    if(currentFlower.sunshineLevel < 100){
+      currentFlower.sunshineLevel += 5
+    }
+    this.updateSunshineLevel(currentFlower)
   }
   elementOnScene (idElement) {
     let elements = []
@@ -230,6 +235,10 @@ export default class Webgl {
       }
     })
     return elements    
+  }
+  removeElement (idElement) {
+    const flower = this.elementOnScene(idElement)
+    flower.forEach(element => this.scene.remove(element) )
   }
   flowerInFlowers(idFlower){
     let currentFlower =''
@@ -249,14 +258,11 @@ export default class Webgl {
         const intersects = this.raycaster.intersectObjects( this.scene.children )
         for ( let i = 0; i < intersects.length; i ++ ) {
           if(intersects[ i ].object.name === 'ground'){
-            const geometry = new BoxGeometry( 10, 10, 10 )
-            const material = new MeshBasicMaterial( {color: 0xff0000} )
-            let seed = new Mesh( geometry, material )
-            seed.name = 'seed'
-            seed.position.x= intersects[ i ].point.x
-            seed.position.y= -5
-            seed.position.z= intersects[ i ].point.z
-            this.scene.add(seed)
+            let sunflower = new Sunflower('sunflower'+this.nbSunFlower,intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+            this.nextState(sunflower)
+            this.allFlowers.push(sunflower)
+            this.nbSunFlower++
+            sunflower.Lsystem("B",1,this.scene)
           }
         }
       }  
@@ -269,7 +275,7 @@ export default class Webgl {
   }
   update(){
     this.allFlowers.forEach( flower => {
-      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)%3 ===0){
+      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%6 ===0){
         if(flower.wateringLevel > 0 ){
           flower.wateringLevel -= 5
         }
@@ -277,19 +283,116 @@ export default class Webgl {
           flower.sunshineLevel -= 5
         }
         if(this.currentlySelected === flower.idFlower){
-          document.querySelector('#wateringLevel').value = flower.wateringLevel
-          document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
-          document.querySelector('#sunshineLevel').value = flower.sunshineLevel
-          document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+          this.updateWateringLevel(flower)
+          this.updateSunshineLevel(flower)
         }
       }
     })
   }
+  timeManagement(e){
+    const choice = e.target.innerHTML
+    switch (choice) {
+      case 'Lente' : 
+        this.timeCoeff = 0.5
+        //this.trueTime = this.globalTime
+        break
+      case 'Normale' : 
+        this.timeCoeff = 1
+        //this.trueTime = this.globalTime
+        break;
+      case 'Rapide' :
+        this.timeCoeff = 2
+        //this.trueTime = this.globalTime
+        break;
+    }
+
+  }
+  updateSunshineLevel(flower){
+    document.querySelector('#sunshineLevel').value = flower.sunshineLevel
+    document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+    if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90){
+      document.querySelector('#sunshineLevel').classList.add('ill')
+    } else{
+      document.querySelector('#sunshineLevel').classList.remove('ill')
+    }
+    if(flower.sunshineLevel <= 80 && flower.sunshineLevel >= 60){
+      document.querySelector('#sunshineLevel').classList.add('good')
+    }else{
+      document.querySelector('#sunshineLevel').classList.remove('good')
+    }
+  }
+  updateWateringLevel(flower){
+    document.querySelector('#wateringLevel').value = flower.wateringLevel
+    document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
+    if(flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
+      document.querySelector('#wateringLevel').classList.add('ill')
+    } else{
+      document.querySelector('#wateringLevel').classList.remove('ill')
+    }
+    if(flower.wateringLevel <= 80 && flower.wateringLevel >= 60){
+      document.querySelector('#wateringLevel').classList.add('good')
+    }else{
+      document.querySelector('#wateringLevel').classList.remove('good')
+    }
+  }
+  nextState(flower){
+    if(flower.growthLevel >=5 && flower.growthLevel<=15){
+      flower.state =0
+    }
+    if(flower.growthLevel >= 20 && flower.growthLevel<=50){
+      flower.state = 1
+    }
+    if(flower.growthLevel >= 55 && flower.growthLevel<=100){
+      flower.state = 2
+    }
+    if(flower.growthLevel >=5 && flower.growthLevel<10){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",1,this.scene)
+    }
+    if(flower.growthLevel >=10 && flower.growthLevel<15){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",2,this.scene)
+    }
+    if(flower.growthLevel >=15 && flower.growthLevel<20){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",3,this.scene)
+    }
+    if(flower.growthLevel >=20 && flower.growthLevel<25){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",1,this.scene)
+    }
+    if(flower.growthLevel >=25 && flower.growthLevel<35){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",2,this.scene)
+    }
+    if(flower.growthLevel >=35 && flower.growthLevel<50){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",3,this.scene)
+    }
+    if(flower.growthLevel >=50 && flower.growthLevel<70){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",3,this.scene)
+    }
+    if(flower.growthLevel >=70 && flower.growthLevel<90){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",4,this.scene)
+    }
+    if(flower.growthLevel >=90 && flower.growthLevel<100){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",5,this.scene)
+    }
+  }
   start () {
     requestAnimationFrame( this.start )
-    this.time += 0.01
+    //this.delta = this.timeCoeff * this.clock.getElapsedTime()
+    //this.curentTime = this.globalTime
+    //this.globalTime = this.trueTime + this.delta
     
-    document.querySelector('#timer').innerHTML = Math.floor(this.clock.getElapsedTime()) + 's'
+    document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
+    this.allFlowers.forEach( flower =>{
+      this.nextState(flower)
+    })
+
     this.controls.update()
 	  this.renderer.render( this.scene, this.camera )
   }
