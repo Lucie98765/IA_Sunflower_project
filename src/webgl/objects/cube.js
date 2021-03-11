@@ -14,7 +14,7 @@ export default class Cube extends Mesh {
     
     this.ill = ill
     this.trueColor = c; 
-    this.illColor = "#0000FF"
+    this.illColor = "#211a01"
 
   }
 
@@ -29,7 +29,7 @@ export default class Cube extends Mesh {
   checkIll(){
     if(this.ill){
       //console.log(this.ill, this)
-      this.material.color.set("#0000FF")
+      this.material.color.set("#211a01")
       //console.log(this.material.color)
     } else {
       this.material.color.set(this.trueColor)

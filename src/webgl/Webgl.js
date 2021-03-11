@@ -70,54 +70,56 @@ export default class Webgl {
     window.addEventListener( 'click', this.select, false )
     document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
 
-    //his.launchSimulation(this.sunflower)
     // A appeler en boucle quand les jauges sont mauvaises 
-    const illCube = Math.floor(Math.random() * (110 - 10) + 10)
-    this.fallIll("sunflower1", illCube) 
+    let illFlower = this.elementOnScene("sunflower1")
+    const max = illFlower.length
+    //const illCube = Math.floor(Math.random() * (max - 10) + 10)
+    illFlower[max-1].setIll(true)
+    let i = 0;
+    const illInterval = setInterval ( () => {
+      this.spreadIllness("sunflower1", max)
+      i++
+      if(i>40) {
+        clearInterval(illInterval)
+        this.recover("sunflower1", max)
+      }
+    }, 500 )
 
   }
 
-  fallIll (flowerId, illCube) {
-    console.log("fall ill random nb : "+illCube)
+  spreadIllness (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
-    flowerElements[illCube].setIll(true)
-    const max = flowerElements.length
-    let illNeighbour = 0
-    let i = 0
     for (let k = 0; k < max; k++) {
-      // console.log("boucle 1 - tour " + k)
+      let illNeighbour = 0
       for(let j = -5; j <6; j++){
         if ((k + j >= 0) && (k + j < max) && j!=k ){ // pour ne pas sortir du tableau + ne pas comptabiliser le cube malade comme un voisin malade
-          //console.log("hey " + (k + j))
-          //console.log(flowerElements[j])
           if(flowerElements[k + j].ill) {
-            illNeighbour += 1
+            illNeighbour = illNeighbour + 1
           }
         }
       }
-      if (illNeighbour >= 1 && illNeighbour <= 10){
+      if (illNeighbour >= 1 && illNeighbour <= 8){
         flowerElements[k].setIll(true)
       }
+      
+      if (illNeighbour > 9){
+        flowerElements[k].setIll(false)
+      }
     }
-    // console.log("ill neighbour : "+illNeighbour)
   }
 
-  launchSimulation (sunflower) {
-    console.log('launchSimulation : ')
-    //console.log(sunflower.grid[6])
-    //sunflower.grid[6].setIll(true) 
-    let i = 6;
-    //let flowerElements = this.elementOnScene("sunflower1")
-    //console.log("elements on screen")
-    //console.log(flowerElements)
-    //flowerElements[6].setIll(true)
-    console.log(flowerElements[6])
-    setInterval( () => {
-      //flowerElements[i].setIll(true)
-      i++
-    }, 1000)
-    
+  // A revoir
+  recover (flowerId, max) {
+    let flowerElements = this.elementOnScene(flowerId)
+    for(let i = 0; i<max; i++){
+      if(flowerElements[i].ill) {
+        setTimeout( () => {
+          flowerElements[i].setIll(false)
+        }, 500 )
+      }
+    }
   }
+
   
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -165,7 +167,7 @@ export default class Webgl {
           document.querySelector('#infoSelected').classList.add('hidden')
           this.currentlySelected = null
           if(element.ill) {
-            element.material.color.set("#0000ff") // change color if ill
+            element.material.color.set("#211a01") // change color if ill
           } 
         }
       })
@@ -181,7 +183,7 @@ export default class Webgl {
         element.isSelected = false
         document.querySelector('#infoSelected').classList.add('hidden')
         if(element.ill) { // change color if ill
-          element.material.color.set("#0000ff")
+          element.material.color.set("#211a01")
         } 
       }
     })
