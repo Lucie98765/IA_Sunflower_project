@@ -2,13 +2,15 @@ import { Vector3 } from 'three'
 import Cube from '../Cube'
 
 export default class Sunflower {
-    constructor(id,x,y,z){
+    constructor(id,x,y,z,creationTime){
         this.createCube = this.createCube.bind(this)
         this.flower = this.flower.bind(this)
         this.leaf = this.leaf.bind(this)
         this.idFlower = id
         this.position = new Vector3(x,y,z)
         this.isSelected = false
+
+        this.creationTime = creationTime
 
         this.wateringLevel = 10
         this.sunshineLevel = 10

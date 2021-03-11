@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Vector3, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Vector3, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock } from 'three'
 
 import { OrbitControls } from './controls/OrbitControls'
 
@@ -15,6 +15,9 @@ export default class Webgl {
     this.flowerInFlowers = this.flowerInFlowers.bind(this)
     this.deselectFlowers = this.deselectFlowers.bind(this)
     this.plantSeed = this.plantSeed.bind(this)
+    this.water =this.water.bind(this)
+    this.sun =this.sun.bind(this)
+    this.update = this.update.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -31,6 +34,10 @@ export default class Webgl {
     this.spotlight = new SpotLight( 0xffffff, 1 )
     this.spotlight.position.set(200, 200, 200)
     this.scene.add(this.spotlight)
+
+    this.clock = new Clock()
+    this.clock.start()
+    this.delta = 0
 
     this.camera.position.x = 260
     this.camera.position.y = 400
@@ -54,9 +61,9 @@ export default class Webgl {
     //console.log(this.scene)
 
     this.allFlowers = []
-    this.sunflower = new Sunflower('sunflower1',0,0,0)
+    this.sunflower = new Sunflower('sunflower1',0,0,0,this.clock.getElapsedTime())
     this.allFlowers.push(this.sunflower)
-    this.sunflower2 = new Sunflower('sunflower2',100,0,0)
+    this.sunflower2 = new Sunflower('sunflower2',100,0,0,this.clock.getElapsedTime())
     this.sunflower2.wateringLevel = 50
     this.allFlowers.push(this.sunflower2)
     
@@ -64,12 +71,19 @@ export default class Webgl {
     this.sunflower.Lsystem("B",2,this.scene)
     this.sunflower2.Lsystem("B",2,this.scene)
 
+    setInterval(this.update, 1000)
+
     this.time = 0
     window.addEventListener('resize', this.onResize)
     window.addEventListener( 'mousemove', this.onMouseMove, false )
-    window.addEventListener( 'click', this.select, false )
+    document.querySelector('canvas').addEventListener( 'click', this.select, false )
     document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
 
+    document.querySelector('#water').addEventListener('click',this.water,false)
+    document.querySelector('#sun').addEventListener('click',this.sun,false)
+
+    const play_gol = document.getElementById('bouton_jeu_vie')
+    play_gol.addEventListener('click', this.launchSimulation(this.sunflower)) // ça se lance sans le clic je sais pas pourquoi 
     // A appeler en boucle quand les jauges sont mauvaises 
     let illFlower = this.elementOnScene("sunflower1")
     const max = illFlower.length
@@ -150,6 +164,7 @@ export default class Webgl {
     const flower = this.flowerInFlowers(id)
     if(type === 'flower'){
       document.querySelector('#infoSelected').classList.remove('hidden')
+      document.querySelector('#flowerName').innerHTML = flower.idFlower
       document.querySelector('#wateringLevel').value = flower.wateringLevel
       document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
       document.querySelector('#sunshineLevel').value = flower.sunshineLevel
@@ -190,6 +205,22 @@ export default class Webgl {
     this.allFlowers.forEach(flower => {
       flower.isSelected = false
     })
+  }
+  water() {
+    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
+    const currentFlower = this.flowerInFlowers(idFlower)
+    currentFlower.wateringLevel += 5
+    //console.log(currentFlower.wateringLevel)
+    document.querySelector('#wateringLevel').value = currentFlower.wateringLevel
+    document.querySelector('#watering').innerHTML = currentFlower.wateringLevel + '%'
+  }
+  sun() {
+    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
+    const currentFlower = this.flowerInFlowers(idFlower)
+    currentFlower.sunshineLevel += 5
+    //console.log(currentFlower.sunshineLevel)
+    document.querySelector('#sunshineLevel').value = currentFlower.sunshineLevel
+    document.querySelector('#sunshine').innerHTML = currentFlower.sunshineLevel + '%'
   }
   elementOnScene (idElement) {
     let elements = []
@@ -236,9 +267,29 @@ export default class Webgl {
     this.camera.updateProjectionMatrix()
     this.renderer.setSize( window.innerWidth, window.innerHeight )
   }
+  update(){
+    this.allFlowers.forEach( flower => {
+      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)%3 ===0){
+        if(flower.wateringLevel > 0 ){
+          flower.wateringLevel -= 5
+        }
+        if(flower.sunshineLevel > 0 ){
+          flower.sunshineLevel -= 5
+        }
+        if(this.currentlySelected === flower.idFlower){
+          document.querySelector('#wateringLevel').value = flower.wateringLevel
+          document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
+          document.querySelector('#sunshineLevel').value = flower.sunshineLevel
+          document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
+        }
+      }
+    })
+  }
   start () {
     requestAnimationFrame( this.start )
     this.time += 0.01
+    
+    document.querySelector('#timer').innerHTML = Math.floor(this.clock.getElapsedTime()) + 's'
     this.controls.update()
 	  this.renderer.render( this.scene, this.camera )
   }
