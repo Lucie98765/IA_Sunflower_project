@@ -66,7 +66,9 @@ export default class Webgl {
     this.allFlowers = []
     this.nbSunFlower = 0
     this.sunflower = new Sunflower('sunflower'+this.nbSunFlower,0,0,0,this.clock.getElapsedTime())
+    this.nbSunFlower++
     this.allFlowers.push(this.sunflower)
+    
     /*this.nbSunFlower++
     this.sunflower2 = new Sunflower('sunflower'+this.nbSunFlower,100,0,0,this.clock.getElapsedTime())
     this.nbSunFlower++
