@@ -3,10 +3,10 @@ import Cube from '../Cube'
 import Webgl from '../../Webgl'
 
 const sentences = [
-  ['TTT-B','TTTF-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TTTF-TTTS-TB'],
-  ['TTT-B','TTFT-TTTT-TFTT--TB','TTFT-TSTT-TFTT-TFTT-TSTT-TB'],
-  ['TTT-B','TFTT-TTTTT-TTTFT-TB','TFTT-TTTTS-TTTFT-TTTTS-TTTTF-TB'],
-  ['TTT-B','TF-TF-TT-TB','TF-TS-TT-TS-TF-TB']
+  ['TTT-B','TTTT-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TTTF-TTTS-TB'],
+  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TTT-TTTT-TSTT-TB'],
+  ['TTT-B','TTTT-TTTTT-TTTFT-TB','TTTT-TTTTS-TTTFT-TTTTS-TTTTF-TB'],
+  ['TTT-B','TT-TF-TT-TB','TT-TF-TT-TT-TS-TB']
 ]
 
 export default class Sunflower {
@@ -30,7 +30,6 @@ export default class Sunflower {
         const min=0 
         const max=4 
         const random = Math.random() * (max - min) + min
-        console.log(Math.floor(random))
         this.string = sentences[Math.floor(random)]
 
         this.state = 0
@@ -388,8 +387,6 @@ export default class Sunflower {
         if(this.wateringLevel <= 80 && this.wateringLevel >= 60){
           if(this.growthLevel < 100){
             this.growthLevel += 5
-            document.querySelector('#growthLevel').value = this.growthLevel
-            document.querySelector('#growth').innerHTML = this.growthLevel + '%'
           }
         }
       }
