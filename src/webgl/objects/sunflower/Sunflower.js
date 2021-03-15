@@ -1,12 +1,11 @@
 import { Vector3 } from 'three'
 import Cube from '../Cube'
-import Webgl from '../../Webgl'
 
 const sentences = [
-  ['TTT-B','TTTT-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TTTF-TTTS-TB'],
-  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TTT-TTTT-TSTT-TB'],
-  ['TTT-B','TTTT-TTTTT-TTTFT-TB','TTTT-TTTTS-TTTFT-TTTTS-TTTTF-TB'],
-  ['TTT-B','TT-TF-TT-TB','TT-TF-TT-TT-TS-TB']
+  ['TTT-B','TTTF-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TB'],
+  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TSTT--TB'],
+  ['TTT-B','TTTT-TTFTT-TTTTT-TB','TTTTS-TTFTT-TTTTS-TB'],
+  ['TTT-B','TT-TF-TT-TB','TT-TF-TS-TB']
 ]
 
 export default class Sunflower {
@@ -378,7 +377,6 @@ export default class Sunflower {
           }
         })
     }
-
     setIsSelected (isSelected){
       this.isSelected = isSelected
     }

@@ -17,6 +17,7 @@ export default class Webgl {
     this.plantSeed = this.plantSeed.bind(this)
     this.water =this.water.bind(this)
     this.sun =this.sun.bind(this)
+    this.love =this.love.bind(this)
     this.update = this.update.bind(this)
     this.updateSunshineLevel = this.updateSunshineLevel.bind(this)
     this.updateWateringLevel = this.updateWateringLevel.bind(this)
@@ -24,6 +25,7 @@ export default class Webgl {
     this.timeManagement = this.timeManagement.bind(this)
     this.removeElement = this.removeElement.bind(this)
     this.nextState = this.nextState.bind(this)
+    this.flowerAtPosition = this.flowerAtPosition.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -93,9 +95,9 @@ export default class Webgl {
 
     document.querySelector('#water').addEventListener('click',this.water,false)
     document.querySelector('#sun').addEventListener('click',this.sun,false)
+    document.querySelector('#love').addEventListener('click',this.love,false)
 
     document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
-    this.i = 0
     // A appeler en boucle quand les jauges sont mauvaises 
     let illFlower = this.elementOnScene("sunflower0")
     const max = illFlower.length
@@ -156,7 +158,6 @@ export default class Webgl {
       this.deselectFlowers()
     }
     this.raycaster.setFromCamera( this.mouse, this.camera )
-    // calculate objects intersecting the picking ray
     const intersects = this.raycaster.intersectObjects( this.scene.children )
     let id = null
     let currentFlowerOnScene = null
@@ -199,8 +200,15 @@ export default class Webgl {
       }
     }
   }
-  
-  
+  flowerAtPosition (x,z) {
+    let result = false
+    this.allFlowers.forEach ( flower => {
+      if((x >= flower.position.x - 15 &&  x < flower.position.x + 15) && (z >= flower.position.z - 15 &&  z < flower.position.z + 15)){
+        result =true
+      }
+    })
+    return result
+  }
   deselectFlowers () {
     this.scene.children.forEach(element => {
       if(element.type === 'flower'){
@@ -231,6 +239,18 @@ export default class Webgl {
       currentFlower.sunshineLevel += 5
     }
     this.updateSunshineLevel(currentFlower)
+  }
+  love() {
+    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
+    const currentFlower = this.flowerInFlowers(idFlower)
+    if(currentFlower.growthLevel < 100){
+      currentFlower.growthLevel += 1
+    }
+    this.updateGrowthLevel(currentFlower)
+    document.querySelector('#love').disabled = true
+    setInterval(() => {
+      document.querySelector('#love').disabled = false
+    },5000)
   }
   elementOnScene (idElement) {
     let elements = []
@@ -264,15 +284,26 @@ export default class Webgl {
         for ( let i = 0; i < intersects.length; i ++ ) {
           if(intersects[ i ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
-              let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
-              this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
-              this.allFlowers.push(sunflower)
-              this.nbSunFlower++
-              sunflower.Lsystem("B",1,this.scene)
-              setInterval(() => {this.nextState(sunflower)},4000)
-
-              if(this.flowerNames.length === 0){
-                document.querySelector('#plant').disabled = true
+              if(this.flowerAtPosition(intersects[ i ].point.x,intersects[ i ].point.z) != true){
+                let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
+                this.allFlowers.push(sunflower)
+                this.nbSunFlower++
+                sunflower.Lsystem("B",1,this.scene)
+                let stateInterval = setInterval(() => {
+                  this.nextState(sunflower)
+                  if(sunflower.growthLevel === 100){
+                    clearInterval(stateInterval)
+                  }
+                },4000)
+                if(this.flowerNames.length === 0){
+                  document.querySelector('#plant').disabled = true
+                }
+              } else {
+                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position ( ou à proximité) !"
+                setTimeout(() => {
+                  document.querySelector('#error').innerHTML = ""
+                }, 2000)
               }
             }
           }
@@ -287,19 +318,22 @@ export default class Webgl {
   }
   update(){
     this.allFlowers.forEach( flower => {
-      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%6 ===0){
+      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%4 ===0){
         if(flower.wateringLevel > 0 ){
           flower.wateringLevel -= 5
         }
+      }
+      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%6 ===0){
         if(flower.sunshineLevel > 0 ){
           flower.sunshineLevel -= 5
         }
-        if(this.currentlySelected === flower.idFlower){
-          this.updateWateringLevel(flower)
-          this.updateSunshineLevel(flower)
-          this.updateGrowthLevel(flower)
-        }
+      }  
+      if(this.currentlySelected === flower.idFlower){
+        this.updateWateringLevel(flower)
+        this.updateSunshineLevel(flower)
+        this.updateGrowthLevel(flower)
       }
+
     })
   }
   timeManagement(e){
@@ -353,7 +387,6 @@ export default class Webgl {
     document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
   }
   nextState(flower){
-    //console.log(flower)
     if(flower.growthLevel >=5 && flower.growthLevel<=15){
       flower.state =0
     }
@@ -385,11 +418,15 @@ export default class Webgl {
     }
     if(flower.growthLevel >=50 && flower.growthLevel<70){
       this.removeElement(flower.idFlower)
-      flower.Lsystem("B",1,this.scene)
+      flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=70 && flower.growthLevel<100){
       this.removeElement(flower.idFlower)
-      flower.Lsystem("B",2,this.scene)
+      flower.Lsystem("B",3,this.scene)
+    }
+    if(flower.growthLevel === 100){
+      this.removeElement(flower.idFlower)
+      flower.Lsystem("B",4,this.scene)
     }
     if(this.currentlySelected === flower.idFlower){
       this.elementOnScene(flower.idFlower).forEach( item =>{

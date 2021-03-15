@@ -145,6 +145,14 @@ h1 {
     display: none;
   }
 }
+#error{
+  position: absolute;
+  z-index: 9;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 #blue{
   position: absolute;
   top: 0;
