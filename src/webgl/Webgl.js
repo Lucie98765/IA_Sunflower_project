@@ -69,21 +69,6 @@ export default class Webgl {
     this.scene.add( this.ground )
 
     this.allFlowers = []
-    this.nbSunFlower = 0
-    this.sunflower = new Sunflower('sunflower'+this.nbSunFlower,0,0,0,this.clock.getElapsedTime())
-    this.nbSunFlower++
-    this.allFlowers.push(this.sunflower)
-    /*
-    this.sunflower2 = new Sunflower('sunflower'+this.nbSunFlower,100,0,0,this.clock.getElapsedTime())
-    this.nbSunFlower++
-    this.sunflower2.wateringLevel = 50
-    this.allFlowers.push(this.sunflower2) */
-    
-    //Axiome + nombre d'itérations
-    this.sunflower.state = 2
-    this.sunflower.Lsystem("B",3,this.scene)
-    //this.sunflower2.state = 2
-    //this.sunflower2.Lsystem("B",4,this.scene)
 
     setInterval(this.update, 1000)
 
@@ -102,6 +87,11 @@ export default class Webgl {
     setInterval( () => {
       this.allFlowers.forEach( flower => {
         this.checkIllness(flower)
+        if(this.currentlySelected === flower.idFlower){
+          this.elementOnScene(flower.idFlower).forEach( item =>{
+            item.material.color.set("#FF0000")
+          })
+        }
       })
     }, 1000)
   }
@@ -301,7 +291,6 @@ export default class Webgl {
                 let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
                 this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
                 this.allFlowers.push(sunflower)
-                this.nbSunFlower++
                 sunflower.Lsystem("B",1,this.scene)
                 let stateInterval = setInterval(() => {
                   this.nextState(sunflower)
