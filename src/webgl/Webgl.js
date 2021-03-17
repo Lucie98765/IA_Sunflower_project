@@ -91,23 +91,29 @@ export default class Webgl {
 
     document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
     this.i = 0
-    // A appeler en boucle quand les jauges sont mauvaises 
-    let illFlower = this.elementOnScene("sunflower0")
-    const max = illFlower.length
-    //const illCube = Math.floor(Math.random() * (max - 10) + 10)
-    illFlower[max-1].setIll(true)
-    let i = 0;
-    const illInterval = setInterval ( () => {
-      this.spreadIllness("sunflower0", max)
-      i++
-      if(i>40) {
-        clearInterval(illInterval)
-        this.recover("sunflower0", max)
-      }
-    }, 500 )
+    
+    setInterval( () => {
+      this.allFlowers.forEach( flower => {
+        this.checkIllness(flower)
+      })
+    }, 1000)
 
   }
 
+  // Vérification taux des jauges
+  checkIllness(flower) {
+    const max = flower.grid.length
+    if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90 || flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
+      flower.grid[max-1].setIll(true)
+      let i = 0;
+        this.spreadIllness(flower.idFlower, max)
+        i++
+    } else {
+      this.recover (flower.idFlower, max)
+    }
+  }
+
+  // Propagation maladie
   spreadIllness (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
     for (let k = 0; k < max; k++) {
@@ -122,13 +128,13 @@ export default class Webgl {
       if (illNeighbour >= 1 && illNeighbour <= 8){
         flowerElements[k].setIll(true)
       }
-      
       if (illNeighbour > 9){
         flowerElements[k].setIll(false)
       }
     }
-  }  
-  // A revoir
+  } 
+
+  // Rétablissement de la plante
   recover (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
     for(let i = 0; i<max; i++){
