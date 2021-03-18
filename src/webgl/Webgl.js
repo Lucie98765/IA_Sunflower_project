@@ -265,7 +265,7 @@ export default class Webgl {
     if(currentFlower.growthLevel < 100){
       currentFlower.growthLevel += 1
     }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CFs', idFlower)
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CF', idFlower)
     this.updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
     setInterval(() => {
@@ -470,7 +470,35 @@ export default class Webgl {
     let count = 0
     const creationCube = setInterval(()=>{
       count ++
-      let cube = new Cube (x,y+40,z,c, false)
+      /* let cube = new Cube (x,y+40,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube) 
+      let cube = new Cube (x+10,y+30,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)*/
+      let cube = new Cube (x-10,y+35,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-10,y+30,z+20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-10,y+40,z-20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-30,y+40,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-30,y+30,z+20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-30,y+35,z-20,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
@@ -478,31 +506,11 @@ export default class Webgl {
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-10,y+35,z,c, false)
+      cube = new Cube (x+10,y+35,z+20,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x,y+40,z+20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x+10,y+30,z+20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-10,y+35,z+20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x,y+40,z-20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x+10,y+30,z-20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-10,y+35,z-20,c, false)
+      cube = new Cube (x+10,y+40,z-20,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
@@ -511,11 +519,11 @@ export default class Webgl {
           let i = 0
           const animation = setInterval(() => {
             i++
-            item.position.y -= 9
+            item.position.y -= 15
             if(item.position.y < y ){
               this.scene.remove(item)
             }
-            if(i === 3){
+            if(i === 2){
               this.scene.remove(item)
               clearInterval(animation)
             }
