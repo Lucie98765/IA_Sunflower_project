@@ -1,22 +1,14 @@
 import Flower from '../flower/Flower'
 
-const sentence = 'TTB'
-const sentences = [
-  ['TTT-B','TTTF-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TB'],
-  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TSTT--TB'],
-  ['TTT-B','TTTT-TTFTT-TTTTT-TB','TTTTS-TTFTT-TTTTS-TB'],
-  ['TTT-B','TT-TF-TT-TB','TT-TF-TS-TB']
-]
+const sentence = 'TB'
 
 export default class Myosotis extends Flower{
     constructor(id,x,y,z,creationTime,scene){
         super(id,x,y,z,creationTime,scene)
         this.flower = this.flower.bind(this)
-        this.leaf = this.leaf.bind(this)
         this.grid = new Array()
-        this.string = sentences[Math.floor(random)]
 
-        //this.string = sentence
+        this.string = sentence
 
         this.state = 0
     }
@@ -30,155 +22,36 @@ export default class Myosotis extends Flower{
     // jaune : FFD000
 
     flower(x, y, z,scene,coeffRotation,rotation){
-        const c= '#0000FF'
-        super.createCube(x,y,z,'#00FF00', scene)
-        if(rotation === 0 || rotation === 2){
-            super.createCube(5*(1+coeffRotation)+x,y,z,'#FF0000', scene)
-            super.createCube(5*(1+coeffRotation)+x,y+5,z,'#FF0000', scene)
-            super.createCube(x+10+coeffRotation*10,y+5,z,'#FF0000', scene)
-
-            super.createCube(15*(1+coeffRotation)+x,y+5,z,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y,z,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y+10,z,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y+5,z+5,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y,z+5,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y+10,z+5,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y+5,z-5,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y,z-5,'#FF0000', scene)
-            super.createCube(15*(1+coeffRotation)+x,y+10,z-5,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+10,z-15,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z-15,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z-15,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+15,z-10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+10,z-10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z-10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z-10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-5,z-10,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+20,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+15,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+10,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-5,z-5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-10,z-5,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+20,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+15,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+10,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-5,z,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-10,z,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+20,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+15,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+10,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-5,z+5,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-10,z+5,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+15,z+10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+10,z+10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z+10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z+10,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y-5,z+10,'#FF0000', scene)
-
-            super.createCube(20*(1+coeffRotation)+x,y+10,z+15,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y+5,z+15,'#FF0000', scene)
-            super.createCube(20*(1+coeffRotation)+x,y,z+15,'#FF0000', scene)
-
-            super.createCube(25*(1+coeffRotation)+x,y+5,z,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y,z,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y-5,z,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+10,z,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+15,z,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+5,z+5,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+5,z+10,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+5,z-10,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y,z+5,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+10,z+5,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+5,z-5,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y,z-5,'#FF0000', scene)
-            super.createCube(25*(1+coeffRotation)+x,y+10,z-5,'#FF0000', scene)
-        }
-        if(rotation === 1 || rotation === 3){
-            super.createCube(+x,y,5*(1+coeffRotation)+z,'#00FF00', scene)
-            super.createCube(+x,y+5,5*(1+coeffRotation)+z,'#00FF00', scene)
-            super.createCube(x,y+5,z+10+coeffRotation*10,'#00FF00', scene)
-
-            super.createCube(x,y+5,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y+5,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y+5,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y+10,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y+10,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y+10,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y,z+15*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y,z+15*(1+coeffRotation),'#3f2204', scene)
-            
-
-            super.createCube(x-15,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-15,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-15,y,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x-10,y+15,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-10,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-10,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-10,y,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-10,y-5,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x-5,y+20,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y+15,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y-5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x-5,y-10,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x,y+20,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y+15,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y-5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x,y-10,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x+5,y+20,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y+15,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y-5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+5,y-10,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x+10,y+15,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+10,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+10,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+10,y,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+10,y-5,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x+15,y+10,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+15,y+5,z+20*(1+coeffRotation),'#fef058', scene)
-            super.createCube(x+15,y,z+20*(1+coeffRotation),'#fef058', scene)
-
-            super.createCube(x,y+5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y-5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y+10,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x,y+15,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y+5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+10,y+5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-10,y+5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x+5,y+10,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y+5,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y,z+25*(1+coeffRotation),'#3f2204', scene)
-            super.createCube(x-5,y+10,z+25*(1+coeffRotation),'#3f2204', scene)
-        }    
+        super.createCube(x,y,z,'#008528', scene)
+        if(rotation === 0 ){
+          super.createCube(5*(1+coeffRotation)+x,y,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y,z,'#FFD000', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y+5,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y-5,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y,z+5,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y,z-5,'#3179E7', scene)
+        } else if (rotation === 2){
+          super.createCube(5*(1+coeffRotation)+x,y,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y,z,'#FFD000', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y+5,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y-5,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y,z+5,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y,z-5,'#3179E7', scene)
+        } else if(rotation === 1){
+          super.createCube(x,y,5*(1+coeffRotation)+z,'#3179E7', scene)
+          super.createCube(x,y+5,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+          super.createCube(x,y-5,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+          super.createCube(x,y,5*(1+coeffRotation)+z+5,'#FFD000', scene)
+          super.createCube(x+5,y,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+          super.createCube(x-5,y,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+        } else {
+          super.createCube(x,y,5*(1+coeffRotation)+z,'#3179E7', scene)
+          super.createCube(x,y+5,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+          super.createCube(x,y-5,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+          super.createCube(x,y,5*(1+coeffRotation)+z-5,'#FFD000', scene)
+          super.createCube(x+5,y,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+          super.createCube(x-5,y,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+        } 
     }
 
     // B = T [ > T > B > T > F ] | > T > T > B > T > F ] - > T > T > T > B > T > F ] | > T > T > T > T > B > T > F ]
@@ -193,61 +66,53 @@ export default class Myosotis extends Flower{
     */
     Lsystem(init,n,scene){
       let string = ""
+      let position = []
         if(this.state === 0 ){
-          string = this.string[0]
+          string = this.string
+          console.log("state : O, string : "+string)
         }
         if(this.state === 1 ){
-          string = this.string[1]
+          string = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+          console.log("state : 1, string : "+string)
         }
         if(this.state === 2 ){
-          string = this.string[2]
+          const phase1 = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+          string = phase1.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
         }
         //pour faire la rotation
-        let rotation = 0
+        let rotation = Math.floor(Math.random() * (4 - 0) + 0)
+        console.log("rotation"+rotation)
         let x =-10
         let y =-10
         let z=0
         x+= this.position.x
         y+= this.position.y
         z+= this.position.z
-        //let r=0
         let instruction=init;
         let str = string
-        for(let i=0;i<n;i++){
-          let tmp=''
-          instruction.split('').forEach((c) => {
-            if(c=="B"){
-              tmp+=str
-            }
-            else{
-              tmp+=c
-            }
-          })
-          instruction=tmp;
-        }
+        //for(let i=0;i<1;i++){
+        let tmp=''
         instruction.split('').forEach((c) => {
-          if(c=="F"){
-            c=str
-            if(rotation === 0){
-              this.leaf(x,y,z,scene,0,rotation)
-            }
-            if(rotation === 1){
-              this.leaf(x,y,z,scene,0,rotation)
-            }
-            if(rotation === 2){
-              this.leaf(x,y,z,scene,-2,rotation)
-            }
-            if(rotation === 3){
-              this.leaf(x,y,z,scene,-2,rotation)
-            }
-            y+=5
+          if(c=="B"){
+            tmp+=str
+          }
+          else{
+            tmp+=c
+          }
+        })
+        instruction=tmp;
+        //}
+        instruction.split('').forEach((c) => {
+          if (c=="[") {
+            position = [x, y, z]
+            console.log(position)
           } else if(c=="T"){
             c=str
-            super.createCube(x,y,z,'#00FF00',scene)
+            super.createCube(x,y,z,'#008528',scene)
             y+=5
-          } else if(c=="S"){
+          } else if(c=="F"){
             c=str
-            if(rotation === 0){
+            if(rotation === 0 ){ //là j'ai modifié un truc, si ça marche pas récup la ligne dans sunflower
               this.flower(x,y,z,scene,0,rotation)
             }
             if(rotation === 1){
@@ -262,20 +127,37 @@ export default class Myosotis extends Flower{
             y+=5
           } else if(c=="B"){
             c=str
-            super.createCube(x,y,z,'#582900',scene)
+            super.createCube(x,y,z,'#008528',scene)
             y+=5
-          }
-          else if(c=="-"){
+          } else if(c=="-"){
             rotation++
             if(rotation ===4){
               rotation = 0
             }
-          }
-          else if(c=="+"){
-            rotation--
-            if(rotation<0){
+          } else if (c=="|"){
+            if (rotation === 0) {
+              rotation = 2
+            } else if (rotation === 1) {
+              rotation = 3
+            }else if (rotation === 2) {
               rotation = 0
+            }else if (rotation === 3) {
+              rotation = 1
             }
+          } else if (c==">"){
+            if (rotation === 0) {
+              x+=5
+            } else if (rotation === 1) {
+              z+=5
+            }else if (rotation === 2) {
+              x-=5
+            }else if (rotation === 3) {
+              z-=5
+            }
+          } else if (c=="]"){
+            x = position[0]
+            y = position[1]
+            z = position[2]
           }
         })
     }

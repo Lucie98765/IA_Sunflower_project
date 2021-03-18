@@ -83,8 +83,14 @@ export default class Webgl {
 
     document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
     this.i = 0
+
+    // TO DELETE - try for myosotis
+    this.myosotis = new Myosotis('sunflower'+this.nbSunFlower,0,0,0,this.clock.getElapsedTime())
+    this.allFlowers.push(this.myosotis)
+    this.myosotis.state = 2
+    this.myosotis.Lsystem("B",3,this.scene)
     
-    setInterval( () => {
+    /*setInterval( () => {
       this.allFlowers.forEach( flower => {
         this.checkIllness(flower)
         if(this.currentlySelected === flower.idFlower){
@@ -93,7 +99,7 @@ export default class Webgl {
           })
         }
       })
-    }, 1000)
+    }, 1000)*/
   }
 
   // Vérification taux des jauges
