@@ -2,8 +2,8 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 
 import { OrbitControls } from './controls/OrbitControls'
 
-import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
+import Myosotis from './objects/myosotis/Myosotis'
 
 export default class Webgl {
   constructor() {
@@ -302,7 +302,7 @@ export default class Webgl {
                   document.querySelector('#plant').disabled = true
                 }
               } else {
-                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position ( ou à proximité) !"
+                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position (ou à proximité) !"
                 setTimeout(() => {
                   document.querySelector('#error').innerHTML = ""
                 }, 2000)
