@@ -26,6 +26,8 @@ export default class Webgl {
     this.removeElement = this.removeElement.bind(this)
     this.nextState = this.nextState.bind(this)
     this.flowerAtPosition = this.flowerAtPosition.bind(this)
+    this.highestPoint = this.highestPoint.bind(this)
+    this.interactionAnimation = this.interactionAnimation.bind(this)
     //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
@@ -69,6 +71,13 @@ export default class Webgl {
     this.scene.add( this.ground )
 
     this.allFlowers = []
+    this.sunflower = new Sunflower('test', 0, -5, 0, this.clock.getElapsedTime())
+    this.sunflower.state = 2
+    this.sunflower.Lsystem("B",3,this.scene)
+    this.allFlowers.push(this.sunflower)
+    this.highestPoint(this.sunflower.idFlower)
+    //this.interactionAnimation(this.flowerInFlowers(this.sunflower.idFlower).position.x, this.flowerInFlowers(this.sunflower.idFlower).position.z, this.highestPoint(this.sunflower.idFlower), '#0000FF', this.sunflower.idFlower)
+
 
     setInterval(this.update, 1000)
 
@@ -144,6 +153,11 @@ export default class Webgl {
         if(flowerElements[i].ill){
           setTimeout( () => {
             flowerElements[i].setIll(false)
+            if(this.currentlySelected === flowerElements[i].idFlower){
+              this.elementOnScene(flowerElements[i].idFlower).forEach( item =>{
+                item.material.color.set("#FF0000")
+              })
+            }
           }, 500 )
         }
       }
@@ -233,6 +247,7 @@ export default class Webgl {
     if(currentFlower.wateringLevel < 100){
       currentFlower.wateringLevel += 5
     }
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#0000FF', idFlower)
     this.updateWateringLevel(currentFlower)
   }
   sun() {
@@ -241,6 +256,7 @@ export default class Webgl {
     if(currentFlower.sunshineLevel < 100){
       currentFlower.sunshineLevel += 5
     }
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F7FF3C', idFlower)
     this.updateSunshineLevel(currentFlower)
   }
   love() {
@@ -249,6 +265,7 @@ export default class Webgl {
     if(currentFlower.growthLevel < 100){
       currentFlower.growthLevel += 1
     }
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CFs', idFlower)
     this.updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
     setInterval(() => {
@@ -288,7 +305,7 @@ export default class Webgl {
           if(intersects[ i ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
               if(this.flowerAtPosition(intersects[ i ].point.x,intersects[ i ].point.z) != true){
-                let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime(), this.scene)
                 this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
                 this.allFlowers.push(sunflower)
                 sunflower.Lsystem("B",1,this.scene)
@@ -300,6 +317,10 @@ export default class Webgl {
                 },4000)
                 if(this.flowerNames.length === 0){
                   document.querySelector('#plant').disabled = true
+                  document.querySelector('#error').innerHTML = "Tu ne peux plus planter de graine mais tu en as déjà bien assez à t'occuper, tu ne crois pas ?"
+                  setTimeout(() => {
+                    document.querySelector('#error').innerHTML = ""
+                  }, 2000)
                 }
               } else {
                 document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position ( ou à proximité) !"
@@ -435,6 +456,77 @@ export default class Webgl {
         item.material.color.set("#FF0000")
       })
     }
+  }
+  highestPoint (idFlower){
+    let temporary = this.elementOnScene(idFlower)[0].position.y
+    this.elementOnScene(idFlower).forEach( item => {
+      if(temporary < item.position.y){
+        temporary = item.position.y
+      }
+    })
+    return temporary
+  }
+  interactionAnimation (x,z,y,c,idFlower) {
+    let count = 0
+    const creationCube = setInterval(()=>{
+      count ++
+      let cube = new Cube (x,y+40,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x+10,y+30,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-10,y+35,z,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x,y+40,z+20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x+10,y+30,z+20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-10,y+35,z+20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x,y+40,z-20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x+10,y+30,z-20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      cube = new Cube (x-10,y+35,z-20,c, false)
+      cube.type = 'animation'
+      cube.idAnim = idFlower
+      this.scene.add(cube)
+      this.scene.children.forEach( item => {
+        if (item.idAnim === cube.idAnim){
+          let i = 0
+          const animation = setInterval(() => {
+            i++
+            item.position.y -= 9
+            if(item.position.y < y ){
+              this.scene.remove(item)
+            }
+            if(i === 3){
+              this.scene.remove(item)
+              clearInterval(animation)
+            }
+          }, 500)
+        }
+      })
+      if(count === 2){
+        clearInterval(creationCube)
+      }
+    },400)
+    
   }
   start () {
     requestAnimationFrame( this.start )
