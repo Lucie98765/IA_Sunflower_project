@@ -1,9 +1,10 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Vector3, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Raycaster, Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock } from 'three'
 
 import { OrbitControls } from './controls/OrbitControls'
 
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
+import Cube from './objects/Cube'
 
 export default class Webgl {
   constructor() {
@@ -11,24 +12,11 @@ export default class Webgl {
     this.onResize = this.onResize.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.select = this.select.bind(this)
-    this.elementOnScene = this.elementOnScene.bind(this)
+    this.update = this.update.bind(this)
     this.flowerInFlowers = this.flowerInFlowers.bind(this)
-    this.deselectFlowers = this.deselectFlowers.bind(this)
-    this.plantSeed = this.plantSeed.bind(this)
     this.water =this.water.bind(this)
     this.sun =this.sun.bind(this)
     this.love =this.love.bind(this)
-    this.update = this.update.bind(this)
-    this.updateSunshineLevel = this.updateSunshineLevel.bind(this)
-    this.updateWateringLevel = this.updateWateringLevel.bind(this)
-    this.updateGrowthLevel = this.updateGrowthLevel.bind(this)
-    this.levelManagement = this.levelManagement.bind(this)
-    this.removeElement = this.removeElement.bind(this)
-    this.nextState = this.nextState.bind(this)
-    this.flowerAtPosition = this.flowerAtPosition.bind(this)
-    this.highestPoint = this.highestPoint.bind(this)
-    this.interactionAnimation = this.interactionAnimation.bind(this)
-    //this.selectPlant = this.selectPlant.bind(this)
 
     this.scene = new Scene()
     this.scene.background = new Color(0xa9cfe3)
@@ -71,18 +59,20 @@ export default class Webgl {
     this.allFlowers = []
 
     setInterval(this.update, 1000)
-
+    this.plantSeed()
     window.addEventListener('resize', this.onResize)
     window.addEventListener( 'mousemove', this.onMouseMove, false )
     document.querySelector('canvas').addEventListener( 'click', this.select, false )
-    document.querySelector('#plant').addEventListener( 'click', this.plantSeed, false )
+    document.querySelector('#plant').addEventListener( 'click', () => {
+      document.body.classList.toggle('plantSeed')
+      document.querySelector('#plant').classList.toggle('selected')
+    }, false )
 
     document.querySelector('#water').addEventListener('click',this.water,false)
     document.querySelector('#sun').addEventListener('click',this.sun,false)
     document.querySelector('#love').addEventListener('click',this.love,false)
 
-    document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false) 
-    this.i = 0
+    document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false)
     
     setInterval( () => {
       this.allFlowers.forEach( flower => {
@@ -149,6 +139,15 @@ export default class Webgl {
       }
     }
   }
+  stayIll(flower,cubeIll){
+    this.elementOnScene(flower.idFlower).forEach( cube => {
+      cubeIll.forEach( cubeIll => {
+        if(cubeIll.position.x === cube.position.x && cubeIll.position.y === cube.position.y && cubeIll.position.z === cube.position.z){
+          cube.setIll(true)
+        }
+      })
+    })
+  }
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -198,12 +197,14 @@ export default class Webgl {
       } else {
         this.currentlySelected = null
       }
+    } else {
+      this.currentlySelected = null
     }
   }
   flowerAtPosition (x,z) {
     let result = false
     this.allFlowers.forEach ( flower => {
-      if((x >= flower.position.x - 10 &&  x < flower.position.x + 10) && (z >= flower.position.z - 10 &&  z < flower.position.z + 10)){
+      if((x >= flower.position.x - 15 &&  x < flower.position.x + 15) && (z >= flower.position.z - 15 &&  z < flower.position.z + 15)){
         result =true
       }
     })
@@ -279,22 +280,20 @@ export default class Webgl {
     return currentFlower
   }
   plantSeed(){
-    document.body.classList.toggle('plantSeed')
-    document.querySelector('#plant').classList.toggle('selected')
     window.addEventListener( 'click', () => {
       if(document.querySelector('#plant').classList.value === 'selected'){
         this.raycaster.setFromCamera( this.mouse, this.camera )
         const intersects = this.raycaster.intersectObjects( this.scene.children )
-        for ( let i = 0; i < intersects.length; i ++ ) {
-          if(intersects[ i ].object.name === 'ground'){
+        if(intersects[ 0 ]) {
+          if(intersects[ 0 ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
-              if(this.flowerAtPosition(intersects[ i ].point.x,intersects[ i ].point.z) != true){
+              if(this.flowerAtPosition(intersects[ 0 ].point.x,intersects[ 0 ].point.z) === false){
                 let newFlower
                 let randomFlower = Math.floor(Math.random() * (2 - 0) + 0)
                 if(randomFlower === 0) {
-                  newFlower = new Myosotis(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                  newFlower = new Myosotis(this.flowerNames[0],intersects[ 0 ].point.x,-5,intersects[ 0 ].point.z,this.clock.getElapsedTime())
                 } else if (randomFlower === 1) {
-                  newFlower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                  newFlower = new Sunflower(this.flowerNames[0],intersects[ 0 ].point.x,-5,intersects[ 0 ].point.z,this.clock.getElapsedTime())
                 }
                 this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
                 this.allFlowers.push(newFlower)
@@ -304,13 +303,12 @@ export default class Webgl {
                   if(newFlower.growthLevel === 100){
                     clearInterval(stateInterval)
                   }
-                },4000*this.levelCoeff)
+                },4000)
                 if(this.flowerNames.length === 0){
-                  document.querySelector('#plant').disabled = true
+                  document.querySelector('#plant').classList.add('hidden')
+                  document.body.classList.remove('plantSeed')
                   document.querySelector('#error').innerHTML = "Tu ne peux plus planter de graine mais tu en as déjà bien assez à t'occuper, tu ne crois pas ?"
-                  setTimeout(() => {
-                    document.querySelector('#error').innerHTML = ""
-                  }, 2000)
+                  setTimeout(() => { document.querySelector('#error').innerHTML = ""}, 3000)
                 }
               } else {
                 document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position (ou à proximité) !"
@@ -318,10 +316,10 @@ export default class Webgl {
                   document.querySelector('#error').innerHTML = ""
                 }, 2000)
               }
-            }
+            } 
           }
         }
-      }  
+      }
     }, false )
   }
   onResize () {
@@ -351,6 +349,8 @@ export default class Webgl {
   }
   levelManagement(e){
     const choice = e.target.innerHTML
+    document.querySelectorAll('.levelManagement button').forEach(element => { element.classList.remove('selected')})
+    e.target.classList.add('selected')
     switch (choice) {
       case 'Facile' : 
         this.levelCoeff = 2
@@ -406,6 +406,7 @@ export default class Webgl {
     if(flower.growthLevel >= 55 && flower.growthLevel<=100){
       flower.state = 2
     }
+    const cubeIll = this.elementOnScene(flower.idFlower).filter(element => element.ill ===true)
     if(flower.growthLevel >=5 && flower.growthLevel<10){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",1,this.scene)
@@ -438,6 +439,7 @@ export default class Webgl {
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",4,this.scene)
     }
+    this.stayIll(flower,cubeIll)
     if(this.currentlySelected === flower.idFlower){
       this.elementOnScene(flower.idFlower).forEach( item =>{
         item.material.color.set("#FF0000")
