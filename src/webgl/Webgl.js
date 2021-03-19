@@ -444,9 +444,6 @@ export default class Webgl {
   }
   start () {
     requestAnimationFrame( this.start )
-    //this.delta = this.timeCoeff * this.clock.getElapsedTime()
-    //this.curentTime = this.globalTime
-    //this.globalTime = this.trueTime + this.delta
     
     document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
     
