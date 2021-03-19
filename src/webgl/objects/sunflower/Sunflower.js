@@ -22,7 +22,7 @@ export default class Sunflower extends Flower{
     }
 
     createCube(x,y,z,c,scene){
-      super.createCube(x,y,x,c,scene)
+      super.createCube(x,y,z,c,scene)
       this.cube.type = 'flower'
   }
 

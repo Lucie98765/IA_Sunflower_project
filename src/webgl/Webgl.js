@@ -2,8 +2,8 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 
 import { OrbitControls } from './controls/OrbitControls'
 
-import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
+import Myosotis from './objects/myosotis/Myosotis'
 
 export default class Webgl {
   constructor() {
@@ -288,13 +288,19 @@ export default class Webgl {
           if(intersects[ i ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
               if(this.flowerAtPosition(intersects[ i ].point.x,intersects[ i ].point.z) != true){
-                let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                let newFlower
+                let randomFlower = Math.floor(Math.random() * (2 - 0) + 0)
+                if(randomFlower === 0) {
+                  newFlower = new Myosotis(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                } else if (randomFlower === 1) {
+                  newFlower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                }
                 this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
-                this.allFlowers.push(sunflower)
-                sunflower.Lsystem("B",1,this.scene)
+                this.allFlowers.push(newFlower)
+                newFlower.Lsystem("B",1,this.scene)
                 let stateInterval = setInterval(() => {
-                  this.nextState(sunflower)
-                  if(sunflower.growthLevel === 100){
+                  this.nextState(newFlower)
+                  if(newFlower.growthLevel === 100){
                     clearInterval(stateInterval)
                   }
                 },4000)
@@ -302,7 +308,7 @@ export default class Webgl {
                   document.querySelector('#plant').disabled = true
                 }
               } else {
-                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position ( ou à proximité) !"
+                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position (ou à proximité) !"
                 setTimeout(() => {
                   document.querySelector('#error').innerHTML = ""
                 }, 2000)
@@ -438,9 +444,6 @@ export default class Webgl {
   }
   start () {
     requestAnimationFrame( this.start )
-    //this.delta = this.timeCoeff * this.clock.getElapsedTime()
-    //this.curentTime = this.globalTime
-    //this.globalTime = this.trueTime + this.delta
     
     document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
     
