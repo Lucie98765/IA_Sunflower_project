@@ -22,7 +22,7 @@ export default class Webgl {
     this.updateSunshineLevel = this.updateSunshineLevel.bind(this)
     this.updateWateringLevel = this.updateWateringLevel.bind(this)
     this.updateGrowthLevel = this.updateGrowthLevel.bind(this)
-    this.timeManagement = this.timeManagement.bind(this)
+    this.levelManagement = this.levelManagement.bind(this)
     this.removeElement = this.removeElement.bind(this)
     this.nextState = this.nextState.bind(this)
     this.flowerAtPosition = this.flowerAtPosition.bind(this)
@@ -49,10 +49,8 @@ export default class Webgl {
     this.clock.start()
 
     this.flowerNames = ['Marguerite','Simone','Georgette','Jeanine','Monique','Ginette','Odette','Germaine','Paulette','Yvette','Berthe','Danielle','Josiane','Michelle','Yvonne','Marcelle','Annie','Jacqueline','Josette','Huguette','Micheline','Claudette','Raymonde','Henriette']
-    //this.delta = 0
-    //this.globalTime = this.clock.getElapsedTime()
-    //this.trueTime = 0
-    this.timeCoeff = 1
+
+    this.levelCoeff = 1
 
     this.camera.position.x = 260
     this.camera.position.y = 400
@@ -71,13 +69,6 @@ export default class Webgl {
     this.scene.add( this.ground )
 
     this.allFlowers = []
-    this.sunflower = new Sunflower('test', 0, -5, 0, this.clock.getElapsedTime())
-    this.sunflower.state = 2
-    this.sunflower.Lsystem("B",3,this.scene)
-    this.allFlowers.push(this.sunflower)
-    this.highestPoint(this.sunflower.idFlower)
-    //this.interactionAnimation(this.flowerInFlowers(this.sunflower.idFlower).position.x, this.flowerInFlowers(this.sunflower.idFlower).position.z, this.highestPoint(this.sunflower.idFlower), '#0000FF', this.sunflower.idFlower)
-
 
     setInterval(this.update, 1000)
 
@@ -90,21 +81,20 @@ export default class Webgl {
     document.querySelector('#sun').addEventListener('click',this.sun,false)
     document.querySelector('#love').addEventListener('click',this.love,false)
 
-    document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
+    document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false) 
     this.i = 0
     
     setInterval( () => {
       this.allFlowers.forEach( flower => {
         this.checkIllness(flower)
-        if(this.currentlySelected === flower.idFlower){
-          this.elementOnScene(flower.idFlower).forEach( item =>{
-            item.material.color.set("#FF0000")
-          })
-        }
       })
+      if(this.currentlySelected != null){
+        this.elementOnScene(this.currentlySelected).forEach( item =>{
+          item.material.color.set("#FF0000")
+        })
+      }
     }, 1000)
   }
-
   // Vérification taux des jauges
   checkIllness(flower) {
     const max = flower.grid.length
@@ -117,7 +107,6 @@ export default class Webgl {
       this.recover (flower.idFlower, max)
     }
   }
-
   // Propagation maladie
   spreadIllness (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
@@ -143,8 +132,7 @@ export default class Webgl {
         } 
       }
     }
-  } 
-
+  }
   // Rétablissement de la plante
   recover (flowerId, max) {
     let flowerElements = this.elementOnScene(flowerId)
@@ -154,22 +142,17 @@ export default class Webgl {
           setTimeout( () => {
             flowerElements[i].setIll(false)
             if(this.currentlySelected === flowerElements[i].idFlower){
-              this.elementOnScene(flowerElements[i].idFlower).forEach( item =>{
-                item.material.color.set("#FF0000")
-              })
+              flowerElements[i].material.color.set("#FF0000")
             }
           }, 500 )
         }
       }
     }
   }
-
-  
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
-  
   select(event){
     if(this.currentlySelected != null){
       this.deselectFlowers()
@@ -220,7 +203,7 @@ export default class Webgl {
   flowerAtPosition (x,z) {
     let result = false
     this.allFlowers.forEach ( flower => {
-      if((x >= flower.position.x - 15 &&  x < flower.position.x + 15) && (z >= flower.position.z - 15 &&  z < flower.position.z + 15)){
+      if((x >= flower.position.x - 10 &&  x < flower.position.x + 10) && (z >= flower.position.z - 10 &&  z < flower.position.z + 10)){
         result =true
       }
     })
@@ -268,8 +251,9 @@ export default class Webgl {
     this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CF', idFlower)
     this.updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
-    setInterval(() => {
+    setTimeout(() => {
       document.querySelector('#love').disabled = false
+      
     },5000)
   }
   elementOnScene (idElement) {
@@ -314,7 +298,7 @@ export default class Webgl {
                   if(sunflower.growthLevel === 100){
                     clearInterval(stateInterval)
                   }
-                },4000)
+                },4000*this.levelCoeff)
                 if(this.flowerNames.length === 0){
                   document.querySelector('#plant').disabled = true
                   document.querySelector('#error').innerHTML = "Tu ne peux plus planter de graine mais tu en as déjà bien assez à t'occuper, tu ne crois pas ?"
@@ -341,12 +325,12 @@ export default class Webgl {
   }
   update(){
     this.allFlowers.forEach( flower => {
-      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%4 ===0){
+      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)% (4*this.levelCoeff) ===0){
         if(flower.wateringLevel > 0 ){
           flower.wateringLevel -= 5
         }
       }
-      if(Math.floor(this.timeCoeff*this.clock.getElapsedTime() - this.timeCoeff*flower.creationTime)%6 ===0){
+      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)% (6*this.levelCoeff) ===0){
         if(flower.sunshineLevel > 0 ){
           flower.sunshineLevel -= 5
         }
@@ -359,20 +343,17 @@ export default class Webgl {
 
     })
   }
-  timeManagement(e){
+  levelManagement(e){
     const choice = e.target.innerHTML
     switch (choice) {
-      case 'Lente' : 
-        this.timeCoeff = 0.5
-        //this.trueTime = this.globalTime
+      case 'Facile' : 
+        this.levelCoeff = 2
         break
-      case 'Normale' : 
-        this.timeCoeff = 1
-        //this.trueTime = this.globalTime
+      case 'Normal' : 
+        this.levelCoeff = 1
         break;
-      case 'Rapide' :
-        this.timeCoeff = 2
-        //this.trueTime = this.globalTime
+      case 'Difficile' :
+        this.levelCoeff = 0.5
         break;
     }
 
@@ -410,7 +391,7 @@ export default class Webgl {
     document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
   }
   nextState(flower){
-    if(flower.growthLevel >=5 && flower.growthLevel<=15){
+    if(flower.growthLevel >=5 && flower.growthLevel<=10){
       flower.state =0
     }
     if(flower.growthLevel >= 20 && flower.growthLevel<=50){
@@ -467,50 +448,39 @@ export default class Webgl {
     return temporary
   }
   interactionAnimation (x,z,y,c,idFlower) {
-    let count = 0
-    const creationCube = setInterval(()=>{
-      count ++
-      /* let cube = new Cube (x,y+40,z,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube) 
-      let cube = new Cube (x+10,y+30,z,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)*/
       let cube = new Cube (x-10,y+35,z,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-10,y+30,z+20,c, false)
+      cube = new Cube (x-10,y+30,z+10,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-10,y+40,z-20,c, false)
+      cube = new Cube (x-10,y+40,z-10,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-30,y+40,z,c, false)
+      cube = new Cube (x-20,y+45,z,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-30,y+30,z+20,c, false)
+      cube = new Cube (x-20,y+50,z+10,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x-30,y+35,z-20,c, false)
+      cube = new Cube (x-20,y+35,z-10,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x+10,y+30,z,c, false)
+      cube = new Cube (x,y+30,z,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x+10,y+35,z+20,c, false)
+      cube = new Cube (x,y+35,z+20,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
-      cube = new Cube (x+10,y+40,z-20,c, false)
+      cube = new Cube (x,y+40,z-20,c, false)
       cube.type = 'animation'
       cube.idAnim = idFlower
       this.scene.add(cube)
@@ -523,26 +493,19 @@ export default class Webgl {
             if(item.position.y < y ){
               this.scene.remove(item)
             }
-            if(i === 2){
+            if(i === 5){
               this.scene.remove(item)
               clearInterval(animation)
             }
-          }, 500)
+          }, 50)
         }
       })
-      if(count === 2){
-        clearInterval(creationCube)
-      }
-    },400)
-    
   }
   start () {
     requestAnimationFrame( this.start )
-    //this.delta = this.timeCoeff * this.clock.getElapsedTime()
-    //this.curentTime = this.globalTime
-    //this.globalTime = this.trueTime + this.delta
-    
-    document.querySelector('#timer').innerHTML = Math.floor(this.timeCoeff*this.clock.getElapsedTime()) + 's'
+
+    let d = new Date(this.clock.getElapsedTime() * 1000)
+    document.querySelector('#timer').innerHTML = d.getMinutes() + ' min ' +  d.getSeconds() + ' s'
     
     this.controls.update()
 	  this.renderer.render( this.scene, this.camera )
