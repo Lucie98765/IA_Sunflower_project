@@ -83,14 +83,8 @@ export default class Webgl {
 
     document.querySelector('.timeManagement').addEventListener('click',this.timeManagement,false) 
     this.i = 0
-
-    // TO DELETE - try for myosotis
-    this.myosotis = new Myosotis('sunflower'+this.nbSunFlower,0,0,0,this.clock.getElapsedTime())
-    this.allFlowers.push(this.myosotis)
-    this.myosotis.state = 2
-    this.myosotis.Lsystem("B",3,this.scene)
     
-    /*setInterval( () => {
+    setInterval( () => {
       this.allFlowers.forEach( flower => {
         this.checkIllness(flower)
         if(this.currentlySelected === flower.idFlower){
@@ -99,7 +93,7 @@ export default class Webgl {
           })
         }
       })
-    }, 1000)*/
+    }, 1000)
   }
 
   // Vérification taux des jauges
@@ -294,13 +288,19 @@ export default class Webgl {
           if(intersects[ i ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
               if(this.flowerAtPosition(intersects[ i ].point.x,intersects[ i ].point.z) != true){
-                let sunflower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                let newFlower
+                let randomFlower = Math.floor(Math.random() * (2 - 0) + 0)
+                if(randomFlower === 0) {
+                  newFlower = new Myosotis(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                } else if (randomFlower === 1) {
+                  newFlower = new Sunflower(this.flowerNames[0],intersects[ i ].point.x,-5,intersects[ i ].point.z,this.clock.getElapsedTime())
+                }
                 this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
-                this.allFlowers.push(sunflower)
-                sunflower.Lsystem("B",1,this.scene)
+                this.allFlowers.push(newFlower)
+                newFlower.Lsystem("B",1,this.scene)
                 let stateInterval = setInterval(() => {
-                  this.nextState(sunflower)
-                  if(sunflower.growthLevel === 100){
+                  this.nextState(newFlower)
+                  if(newFlower.growthLevel === 100){
                     clearInterval(stateInterval)
                   }
                 },4000)

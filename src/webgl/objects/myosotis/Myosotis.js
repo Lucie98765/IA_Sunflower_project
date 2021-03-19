@@ -11,15 +11,14 @@ export default class Myosotis extends Flower{
         this.string = sentence
 
         this.state = 0
+        this.rotation = Math.floor(Math.random() * (4 - 0) + 0)
+
     }
 
     createCube(x,y,z,c,scene){
       super.createCube(x,y,z,c,scene)
       this.cube.type = 'flower'
     }
-    // bleu : 3179E7
-    // vert : 008528
-    // jaune : FFD000
 
     flower(x, y, z,scene,coeffRotation,rotation){
         super.createCube(x,y,z,'#008528', scene)
@@ -54,111 +53,101 @@ export default class Myosotis extends Flower{
         } 
     }
 
-    // B = T [ > T > B > T > F ] | > T > T > B > T > F ] - > T > T > T > B > T > F ] | > T > T > T > T > B > T > F ]
-    /*
-      B : bouture; T : tige; F : fleur
-      Angle α : 90°
-      - : tourner à droite d’un angle α
-      | : tourner sur soi même de 180° (= 2 rotations de α)
-      [ : sauvegarder la position du cube
-      ] : retourner à la position du cube sauvegardé
-      > : avancer de 1 dans la direction vers laquelle le cube est tourné (genre x + 1 si tourné vers la droite, z + 1 si vers le fond, x - 1, z - 1)
-    */
     Lsystem(init,n,scene){
       let string = ""
       let position = []
-        if(this.state === 0 ){
-          string = this.string
-          console.log("state : O, string : "+string)
+      if(this.state === 0 ){
+        string = this.string
+      }
+      if(this.state === 1 ){
+        string = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+      }
+      if(this.state === 2 ){
+        const phase1 = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+        string = phase1.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+        if(n===4){
+          string = string + "TTTTF-F-F-F" // juste pour "finir" un peu la plante
         }
-        if(this.state === 1 ){
-          string = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
-          console.log("state : 1, string : "+string)
+      }
+      //pour faire la rotation
+      let rotation = this.rotation
+      let x =-10
+      let y =-10
+      let z=0
+      x+= this.position.x
+      y+= this.position.y
+      z+= this.position.z
+      let instruction=init;
+      let str = string
+      //for(let i=0;i<1;i++){
+      let tmp=''
+      instruction.split('').forEach((c) => {
+        if(c=="B"){
+          tmp+=str
         }
-        if(this.state === 2 ){
-          const phase1 = this.string.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
-          string = phase1.replace(/B/g, "T[>T>T>B>T>F]|>T>T>B>T>F]->T>T>B>T>F]|>T>T>B>T>F]")
+        else{
+          tmp+=c
         }
-        //pour faire la rotation
-        let rotation = Math.floor(Math.random() * (4 - 0) + 0)
-        console.log("rotation"+rotation)
-        let x =-10
-        let y =-10
-        let z=0
-        x+= this.position.x
-        y+= this.position.y
-        z+= this.position.z
-        let instruction=init;
-        let str = string
-        //for(let i=0;i<1;i++){
-        let tmp=''
-        instruction.split('').forEach((c) => {
-          if(c=="B"){
-            tmp+=str
+      })
+      instruction=tmp;
+      //}
+      instruction.split('').forEach((c) => {
+        if (c=="[") {
+          position = [x, y, z]
+        } else if(c=="T"){
+          c=str
+          super.createCube(x,y,z,'#008528',scene)
+          y+=5
+        } else if(c=="F"){
+          c=str
+          if(rotation === 0 ){
+            this.flower(x,y,z,scene,0,rotation)
           }
-          else{
-            tmp+=c
+          if(rotation === 1){
+            this.flower(x,y,z,scene,0,rotation)
           }
-        })
-        instruction=tmp;
-        //}
-        instruction.split('').forEach((c) => {
-          if (c=="[") {
-            position = [x, y, z]
-            console.log(position)
-          } else if(c=="T"){
-            c=str
-            super.createCube(x,y,z,'#008528',scene)
-            y+=5
-          } else if(c=="F"){
-            c=str
-            if(rotation === 0 ){ //là j'ai modifié un truc, si ça marche pas récup la ligne dans sunflower
-              this.flower(x,y,z,scene,0,rotation)
-            }
-            if(rotation === 1){
-              this.flower(x,y,z,scene,0,rotation)
-            }
-            if(rotation === 2){
-              this.flower(x,y,z,scene,-2,rotation)
-            }
-            if(rotation === 3){
-              this.flower(x,y,z,scene,-2,rotation)
-            }
-            y+=5
-          } else if(c=="B"){
-            c=str
-            super.createCube(x,y,z,'#008528',scene)
-            y+=5
-          } else if(c=="-"){
-            rotation++
-            if(rotation ===4){
-              rotation = 0
-            }
-          } else if (c=="|"){
-            if (rotation === 0) {
-              rotation = 2
-            } else if (rotation === 1) {
-              rotation = 3
-            }else if (rotation === 2) {
-              rotation = 0
-            }else if (rotation === 3) {
-              rotation = 1
-            }
-          } else if (c==">"){
-            if (rotation === 0) {
-              x+=5
-            } else if (rotation === 1) {
-              z+=5
-            }else if (rotation === 2) {
-              x-=5
-            }else if (rotation === 3) {
-              z-=5
-            }
-          } else if (c=="]"){
-            x = position[0]
-            y = position[1]
-            z = position[2]
+          if(rotation === 2){
+            this.flower(x,y,z,scene,-2,rotation)
           }
-        })
+          if(rotation === 3){
+            this.flower(x,y,z,scene,-2,rotation)
+          }
+          y+=5
+        } else if(c=="B"){
+          c=str
+          super.createCube(x,y,z,'#008528',scene)
+          y+=5
+        } else if(c=="-"){
+          rotation++
+          if(rotation ===4){
+            rotation = 0
+          }
+        } else if (c=="|"){
+          if (rotation === 0) {
+            rotation = 2
+          } else if (rotation === 1) {
+            rotation = 3
+          }else if (rotation === 2) {
+            rotation = 0
+          }else if (rotation === 3) {
+            rotation = 1
+          }
+        } else if (c==">"){
+          if (rotation === 0) {
+            x+=5
+          } else if (rotation === 1) {
+            z+=5
+          }else if (rotation === 2) {
+            x-=5
+          }else if (rotation === 3) {
+            z-=5
+          }
+        } else if (c=="]"){
+          x = position[0]
+          y = position[1]
+          z = position[2]
+        }
+      })
+
     }
 }
