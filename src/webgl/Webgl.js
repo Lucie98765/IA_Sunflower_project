@@ -2,6 +2,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 
 import { OrbitControls } from './controls/OrbitControls'
 
+import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
 
@@ -246,14 +247,17 @@ export default class Webgl {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
     if(currentFlower.growthLevel < 100){
-      currentFlower.growthLevel += 1
+      if((currentFlower.growthLevel + 1) > 100){
+        currentFlower.growthLevel = 100
+      } else {
+        currentFlower.growthLevel += 1
+      }
     }
     this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CF', idFlower)
     this.updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
     setTimeout(() => {
       document.querySelector('#love').disabled = false
-      
     },5000)
   }
   elementOnScene (idElement) {
@@ -301,7 +305,7 @@ export default class Webgl {
                 newFlower.Lsystem("B",1,this.scene)
                 let stateInterval = setInterval(() => {
                   this.nextState(newFlower)
-                  if(newFlower.growthLevel === 100){
+                  if(newFlower.growthLevel >= 100){
                     clearInterval(stateInterval)
                   }
                 },4000*this.levelCoeff)
@@ -394,7 +398,11 @@ export default class Webgl {
   }
   updateGrowthLevel(flower){
     document.querySelector('#growthLevel').value = flower.growthLevel
-    document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
+    if (flower.growthLevel > 100) {
+      document.querySelector('#growth').innerHTML = '100%'
+    } else {
+      document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
+    }
   }
   nextState(flower){
     if(flower.growthLevel >=5 && flower.growthLevel<=10){
@@ -434,7 +442,7 @@ export default class Webgl {
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
-    if(flower.growthLevel === 100){
+    if(flower.growthLevel >= 100){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",4,this.scene)
     }
