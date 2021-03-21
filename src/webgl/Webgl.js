@@ -41,11 +41,17 @@ export default class Webgl {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
     this.spotlight1 = new SpotLight( 0xffffff, 1 )
-    this.spotlight1.position.set(500, 200, 500)
+    this.spotlight1.position.set(300, 600, 300)
     this.scene.add(this.spotlight1)
     this.spotlight2 = new SpotLight( 0xffffff, 1 )
-    this.spotlight2.position.set(-500, 500, -500)
+    this.spotlight2.position.set(-300, 600, -300)
     this.scene.add(this.spotlight2)
+    this.spotlight4 = new SpotLight( 0xffffff, 1 )
+    this.spotlight4.position.set(400, 700, -400)
+    this.scene.add(this.spotlight4)
+    this.spotlight5 = new SpotLight( 0xffffff, 1 )
+    this.spotlight5.position.set(-400, 700, 400)
+    this.scene.add(this.spotlight5)
 
     this.clock = new Clock()
     this.clock.start()
@@ -96,7 +102,7 @@ export default class Webgl {
       })
       if(this.currentlySelected != null){
         this.elementOnScene(this.currentlySelected).forEach( item =>{
-          item.material.color.set("#FF0000")
+          item.material.color.set("#f23d3d")
         })
       }
     }, 1000)
@@ -148,7 +154,7 @@ export default class Webgl {
           setTimeout( () => {
             flowerElements[i].setIll(false)
             if(this.currentlySelected === flowerElements[i].idFlower){
-              flowerElements[i].material.color.set("#FF0000")
+              flowerElements[i].material.color.set("#f23d3d")
             }
           }, 500 )
         }
@@ -189,7 +195,7 @@ export default class Webgl {
         document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
         currentFlowerOnScene.forEach( element => {
           if(element.isSelected != true){
-            element.material.color.set( 0xff0000 )
+            element.material.color.set( 0xf23d3d )
             element.isSelected = true
           } else {
             element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
@@ -236,7 +242,7 @@ export default class Webgl {
     if(currentFlower.wateringLevel < 100){
       currentFlower.wateringLevel += 5
     }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#0000FF', idFlower)
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#2fc7ea', idFlower)
     this.updateWateringLevel(currentFlower)
   }
   sun() {
@@ -453,7 +459,7 @@ export default class Webgl {
     }
     if(this.currentlySelected === flower.idFlower){
       this.elementOnScene(flower.idFlower).forEach( item =>{
-        item.material.color.set("#FF0000")
+        item.material.color.set("#f23d3d")
       })
     }
   }
