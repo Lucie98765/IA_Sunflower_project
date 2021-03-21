@@ -27,16 +27,16 @@ export default class Webgl {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
-    this.spotlight1 = new SpotLight( 0xffffff, 1 )
+    this.spotlight1 = new SpotLight( 0xffffff, 0.7 )
     this.spotlight1.position.set(300, 600, 300)
     this.scene.add(this.spotlight1)
-    this.spotlight2 = new SpotLight( 0xffffff, 1 )
+    this.spotlight2 = new SpotLight( 0xffffff, 0.7 )
     this.spotlight2.position.set(-300, 600, -300)
     this.scene.add(this.spotlight2)
-    this.spotlight4 = new SpotLight( 0xffffff, 1 )
+    this.spotlight4 = new SpotLight( 0xffffff, 0.7 )
     this.spotlight4.position.set(400, 700, -400)
     this.scene.add(this.spotlight4)
-    this.spotlight5 = new SpotLight( 0xffffff, 1 )
+    this.spotlight5 = new SpotLight( 0xffffff, 0.7 )
     this.spotlight5.position.set(-400, 700, 400)
     this.scene.add(this.spotlight5)
 

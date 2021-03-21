@@ -10,15 +10,12 @@ export default class Cube extends Mesh {
     this.position.x = x;
     this.position.y = y;
     this.position.z = z;
-    //ill : true = bloc malade, false = bloc sain
     
+    //ill : true = bloc malade, false = bloc sain
     this.ill = ill
     this.trueColor = c; 
     this.illColor = "#211a01"
 
-  }
-
-  update() {
   }
 
   setIll(value){
@@ -28,9 +25,7 @@ export default class Cube extends Mesh {
 
   checkIll(){
     if(this.ill){
-      //console.log(this.ill, this)
       this.material.color.set("#211a01")
-      //console.log(this.material.color)
     } else {
       this.material.color.set(this.trueColor)
     }
