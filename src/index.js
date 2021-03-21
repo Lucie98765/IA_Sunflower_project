@@ -1,9 +1,9 @@
 import './styles/main.scss';
 
-import Webgl from './webgl/Webgl';
+import Game from './game/Game';
 
 document.querySelector('#popup').addEventListener('click', () => {
     document.querySelector('#close').style.display = 'none'
-    const webgl = new Webgl();
-    webgl.start();
+    const game = new Game();
+    game.start();
 })

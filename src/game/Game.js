@@ -6,7 +6,7 @@ import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
 
-export default class Webgl {
+export default class Game {
   constructor() {
     this.start = this.start.bind(this)
     this.onResize = this.onResize.bind(this)
