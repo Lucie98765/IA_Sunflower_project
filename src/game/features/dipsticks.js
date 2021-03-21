@@ -10,6 +10,7 @@ export const water = (allFlowers, scene) => {
     interactionAnimation(flowerInFlowers(idFlower, allFlowers).position.x, flowerInFlowers(idFlower, allFlowers).position.z, highestPoint(idFlower,scene), '#2fc7ea', idFlower,scene)
     updateWateringLevel(currentFlower)
   }
+
 export const sun = (allFlowers, scene) => {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = flowerInFlowers(idFlower, allFlowers)
@@ -19,6 +20,7 @@ export const sun = (allFlowers, scene) => {
     interactionAnimation(flowerInFlowers(idFlower, allFlowers).position.x, flowerInFlowers(idFlower, allFlowers).position.z, highestPoint(idFlower,scene), '#F7FF3C', idFlower,scene)
     updateSunshineLevel(currentFlower)
   }
+
 export const love = (allFlowers, scene) => {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = flowerInFlowers(idFlower, allFlowers)
@@ -36,6 +38,7 @@ export const love = (allFlowers, scene) => {
       document.querySelector('#love').disabled = false
     },5000)
 }
+
 export const updateSunshineLevel = (flower) => {
     document.querySelector('#sunshineLevel').value = flower.sunshineLevel
     document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
@@ -50,6 +53,7 @@ export const updateSunshineLevel = (flower) => {
       document.querySelector('#sunshineLevel').classList.remove('good')
     }
 }
+
 export const updateWateringLevel = (flower) => {
     document.querySelector('#wateringLevel').value = flower.wateringLevel
     document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
@@ -64,6 +68,7 @@ export const updateWateringLevel = (flower) => {
       document.querySelector('#wateringLevel').classList.remove('good')
     }
 }
+
 export const updateGrowthLevel = (flower) => {
     document.querySelector('#growthLevel').value = flower.growthLevel
     if (flower.growthLevel > 100) {
@@ -72,6 +77,7 @@ export const updateGrowthLevel = (flower) => {
       document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
     }
 }
+
 export const interactionAnimation = (x, z, y,c , idFlower, scene) => {
     let cube = new Cube (x-10,y+35,z,c, false)
     cube.type = 'animation'
@@ -123,6 +129,26 @@ export const interactionAnimation = (x, z, y,c , idFlower, scene) => {
             clearInterval(animation)
           }
         }, 50)
+      }
+    })
+}
+
+export const update = (allFlowers, clock, levelCoeff, currentlySelected) => {
+    allFlowers.forEach( flower => {
+      if(Math.floor(clock.getElapsedTime() - flower.creationTime)% (4*levelCoeff) ===0){
+        if(flower.wateringLevel > 0 ){
+          flower.wateringLevel -= 5
+        }
+      }
+      if(Math.floor(clock.getElapsedTime() - flower.creationTime)% (6*levelCoeff) ===0){
+        if(flower.sunshineLevel > 0 ){
+          flower.sunshineLevel -= 5
+        }
+      }  
+      if(currentlySelected === flower.idFlower){
+        updateWateringLevel(flower)
+        updateSunshineLevel(flower)
+        updateGrowthLevel(flower)
       }
     })
 }

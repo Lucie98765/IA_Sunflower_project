@@ -2,11 +2,10 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 
 import { OrbitControls } from './controls/OrbitControls'
 
-import Sunflower from './objects/sunflower/Sunflower'
-import Myosotis from './objects/myosotis/Myosotis'
-import {checkIllness, stayIll} from './features/illness'
-import {elementOnScene, flowerAtPosition, removeElement, flowerInFlowers} from './features/sceneManagement'
-import {water, sun, love, updateSunshineLevel, updateWateringLevel, updateGrowthLevel} from './features/dipsticks'
+import {checkIllness} from './features/illness'
+import {elementOnScene, flowerInFlowers} from './features/sceneManagement'
+import {water, sun, love, updateSunshineLevel, updateWateringLevel, updateGrowthLevel, update} from './features/dipsticks'
+import {plantSeed} from './features/plantManagement'
 
 export default class Game {
   constructor() {
@@ -14,7 +13,6 @@ export default class Game {
     this.onResize = this.onResize.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.select = this.select.bind(this)
-    this.update = this.update.bind(this)
 
     this.scene = new Scene()
     this.scene.background = new Color(0xa9cfe3)
@@ -41,8 +39,6 @@ export default class Game {
     this.clock = new Clock()
     this.clock.start()
 
-    this.flowerNames = ['Marguerite','Simone','Georgette','Jeanine','Monique','Ginette','Odette','Germaine','Paulette','Yvette','Berthe','Danielle','Josiane','Michelle','Yvonne','Marcelle','Annie','Jacqueline','Josette','Huguette','Micheline','Claudette','Raymonde','Henriette']
-
     this.levelCoeff = 1
 
     this.camera.position.x = 260
@@ -63,8 +59,8 @@ export default class Game {
 
     this.allFlowers = []
 
-    setInterval(this.update, 1000)
-    this.plantSeed()
+    setInterval(() => { update(this.allFlowers, this.clock, this.levelCoeff, this.currentlySelected) }, 1000)
+    plantSeed(this.raycaster, this.mouse, this.camera, this.clock, this.scene, this.allFlowers, this.currentlySelected)
     window.addEventListener('resize', this.onResize)
     window.addEventListener( 'mousemove', this.onMouseMove, false )
     document.querySelector('canvas').addEventListener( 'click', this.select, false )
@@ -167,75 +163,12 @@ export default class Game {
     })
   }
 
-  
-  plantSeed(){
-    window.addEventListener( 'click', () => {
-      if(document.querySelector('#plant').classList.value === 'selected'){
-        this.raycaster.setFromCamera( this.mouse, this.camera )
-        const intersects = this.raycaster.intersectObjects( this.scene.children )
-        if(intersects[ 0 ]) {
-          if(intersects[ 0 ].object.name === 'ground'){
-            if(document.querySelector('#plant').disabled != true){
-              if(flowerAtPosition(intersects[ 0 ].point.x,intersects[ 0 ].point.z, this.allFlowers) === false){
-                let newFlower
-                let randomFlower = Math.floor(Math.random() * (2 - 0) + 0)
-                if(randomFlower === 0) {
-                  newFlower = new Myosotis(this.flowerNames[0],intersects[ 0 ].point.x,-5,intersects[ 0 ].point.z,this.clock.getElapsedTime())
-                } else if (randomFlower === 1) {
-                  newFlower = new Sunflower(this.flowerNames[0],intersects[ 0 ].point.x,-5,intersects[ 0 ].point.z,this.clock.getElapsedTime())
-                }
-                this.flowerNames = this.flowerNames.filter(item => item !== this.flowerNames[0])
-                this.allFlowers.push(newFlower)
-                newFlower.Lsystem("B",1,this.scene)
-                let stateInterval = setInterval(() => {
-                  this.nextState(newFlower)
-                  if(newFlower.growthLevel >= 100){
-                    clearInterval(stateInterval)
-                  }
-                },4000)
-                if(this.flowerNames.length === 0){
-                  document.querySelector('#plant').classList.add('hidden')
-                  document.body.classList.remove('plantSeed')
-                  document.querySelector('#error').innerHTML = "Tu ne peux plus planter de graine mais tu en as déjà bien assez à t'occuper, tu ne crois pas ?"
-                  setTimeout(() => { document.querySelector('#error').innerHTML = ""}, 3000)
-                }
-              } else {
-                document.querySelector('#error').innerHTML = "Une fleur est déjà plantée à cette position (ou à proximité) !"
-                setTimeout(() => {
-                  document.querySelector('#error').innerHTML = ""
-                }, 2000)
-              }
-            } 
-          }
-        }
-      }
-    }, false )
-  }
   onResize () {
     this.camera.aspect = window.innerWidth / window.innerHeight
     this.camera.updateProjectionMatrix()
     this.renderer.setSize( window.innerWidth, window.innerHeight )
   }
-  update(){
-    this.allFlowers.forEach( flower => {
-      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)% (4*this.levelCoeff) ===0){
-        if(flower.wateringLevel > 0 ){
-          flower.wateringLevel -= 5
-        }
-      }
-      if(Math.floor(this.clock.getElapsedTime() - flower.creationTime)% (6*this.levelCoeff) ===0){
-        if(flower.sunshineLevel > 0 ){
-          flower.sunshineLevel -= 5
-        }
-      }  
-      if(this.currentlySelected === flower.idFlower){
-        updateWateringLevel(flower)
-        updateSunshineLevel(flower)
-        updateGrowthLevel(flower)
-      }
 
-    })
-  }
   levelManagement(e){
     const choice = e.target.innerHTML
     document.querySelectorAll('.levelManagement button').forEach(element => { element.classList.remove('selected')})
@@ -251,59 +184,8 @@ export default class Game {
         this.levelCoeff = 0.5
         break;
     }
-
   }
 
-  nextState(flower){
-    if(flower.growthLevel >=5 && flower.growthLevel<=10){
-      flower.state =0
-    }
-    if(flower.growthLevel >= 20 && flower.growthLevel<=50){
-      flower.state = 1
-    }
-    if(flower.growthLevel >= 55 && flower.growthLevel<=100){
-      flower.state = 2
-    }
-    const cubeIll = elementOnScene(flower.idFlower, this.scene).filter(element => element.ill ===true)
-    if(flower.growthLevel >=5 && flower.growthLevel<10){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",1,this.scene)
-    }
-    if(flower.growthLevel >=10 && flower.growthLevel<15){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",2,this.scene)
-    }
-    if(flower.growthLevel >=15 && flower.growthLevel<20){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",3,this.scene)
-    }
-    if(flower.growthLevel >=20 && flower.growthLevel<35){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",1,this.scene)
-    }
-    if(flower.growthLevel >=35 && flower.growthLevel<50){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",2,this.scene)
-    }
-    if(flower.growthLevel >=50 && flower.growthLevel<70){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",2,this.scene)
-    }
-    if(flower.growthLevel >=70 && flower.growthLevel<100){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",3,this.scene)
-    }
-    if(flower.growthLevel >= 100){
-      removeElement(flower.idFlower, this.scene)
-      flower.Lsystem("B",4,this.scene)
-    }
-    stayIll(flower,cubeIll, this.scene)
-    if(this.currentlySelected === flower.idFlower){
-      elementOnScene(flower.idFlower, this.scene).forEach( item =>{
-        item.material.color.set("#f23d3d")
-      })
-    }
-  }
   start () {
     requestAnimationFrame( this.start )
 
