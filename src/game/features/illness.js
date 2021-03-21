@@ -6,23 +6,23 @@ export const checkIllness = (flower,currentlySelected, scene) => {
     if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90 || flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
         flower.grid[max-1].setIll(true)
         let i = 0;
-        spreadIllness(flower.idFlower, max, scene)
+        spreadIllness(flower.idFlower, max, scene, currentlySelected)
         i++
     } else {
         recover (flower.idFlower, max,currentlySelected,scene)
     }
 }
 // Propagation maladie
-export const spreadIllness = (flowerId, max, scene) => {
+export const spreadIllness = (flowerId, max, scene, currentlySelected) => {
     let flowerElements = elementOnScene(flowerId, scene)
     for (let k = 0; k < max; k++) {
         let illNeighbour = 0
         for(let j = -5; j <6; j++){
         if ((k + j >= 0) && (k + j < max) && j!=k ){ // pour ne pas sortir du tableau + ne pas comptabiliser le cube malade comme un voisin malade
             if(flowerElements[k + j]) {
-            if(flowerElements[k + j].ill){
-                illNeighbour = illNeighbour + 1
-            }   
+                if(flowerElements[k + j].ill){
+                    illNeighbour = illNeighbour + 1
+                }   
             }
         }
         }
@@ -36,6 +36,11 @@ export const spreadIllness = (flowerId, max, scene) => {
             flowerElements[k].setIll(false)
         } 
         }
+    }
+    if(currentlySelected === flowerId){
+        elementOnScene(flowerId, scene).forEach( item =>{
+          item.material.color.set("#f23d3d")
+        })
     }
 }
 // Rétablissement de la plante

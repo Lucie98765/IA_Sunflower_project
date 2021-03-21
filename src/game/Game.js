@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock, TextureLoader } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, DirectionalLight, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock, TextureLoader } from 'three'
 
 import { OrbitControls } from './controls/OrbitControls'
 
@@ -23,18 +23,12 @@ export default class Game {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
-    this.spotlight1 = new SpotLight( 0xffffff, 0.7 )
-    this.spotlight1.position.set(300, 600, 300)
+    this.ambientLight = new AmbientLight (0xffffff, 1)
+    this.scene.add(this.ambientLight)
+    this.spotlight1 = new SpotLight( 0xffffff, 0.5 )
+    this.spotlight1.position.set(0, 600, 0)
+    this.spotlight1.focus = 1
     this.scene.add(this.spotlight1)
-    this.spotlight2 = new SpotLight( 0xffffff, 0.7 )
-    this.spotlight2.position.set(-300, 600, -300)
-    this.scene.add(this.spotlight2)
-    this.spotlight4 = new SpotLight( 0xffffff, 0.7 )
-    this.spotlight4.position.set(400, 700, -400)
-    this.scene.add(this.spotlight4)
-    this.spotlight5 = new SpotLight( 0xffffff, 0.7 )
-    this.spotlight5.position.set(-400, 700, 400)
-    this.scene.add(this.spotlight5)
 
     this.clock = new Clock()
     this.clock.start()
@@ -55,6 +49,7 @@ export default class Game {
     this.ground = new Mesh( geometry, material )
     this.ground.position.y = -30
     this.ground.name = 'ground'
+    this.ground.receiveShadow = true;
     this.scene.add( this.ground )
 
     this.allFlowers = []
@@ -84,11 +79,6 @@ export default class Game {
       this.allFlowers.forEach( flower => {
         checkIllness(flower, this.currentlySelected, this.scene)
       })
-      if(this.currentlySelected != null){
-        elementOnScene(this.currentlySelected, this.scene).forEach( item =>{
-          item.material.color.set("#f23d3d")
-        })
-      }
     }, 1000)
   }
   
@@ -134,15 +124,18 @@ export default class Game {
             element.isSelected = false
             document.querySelector('#infoSelected').classList.add('hidden')
             this.currentlySelected = null
+            document.querySelector('#flowerName').innerHTML = ''
             if(element.ill) {
               element.material.color.set("#211a01") // change color if ill
             } 
           }
         })
       } else {
+        document.querySelector('#flowerName').innerHTML = ''
         this.currentlySelected = null
       }
     } else {
+      document.querySelector('#flowerName').innerHTML = ''
       this.currentlySelected = null
     }
   }
@@ -172,7 +165,11 @@ export default class Game {
   levelManagement(e){
     const choice = e.target.innerHTML
     document.querySelectorAll('.levelManagement button').forEach(element => { element.classList.remove('selected')})
-    e.target.classList.add('selected')
+    document.querySelectorAll('.levelManagement button').forEach( element => {
+      if(element === e.target){
+        e.target.classList.add('selected')
+      }
+    })
     switch (choice) {
       case 'Facile' : 
         this.levelCoeff = 2

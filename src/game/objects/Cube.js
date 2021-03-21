@@ -1,10 +1,10 @@
-import { BoxGeometry, MeshPhysicalMaterial, Mesh } from 'three'
+import { BoxGeometry, MeshStandardMaterial, Mesh } from 'three'
 
 export default class Cube extends Mesh {
 
   constructor(x,y,z,c, ill) {
     const geometry = new BoxGeometry( 5,5,5);
-    const material = new MeshPhysicalMaterial( { color: c, wireframe: false } );
+    const material = new MeshStandardMaterial( { color: c, wireframe: false } );
     super(geometry, material);
 
     this.position.x = x;
@@ -15,7 +15,6 @@ export default class Cube extends Mesh {
     this.ill = ill
     this.trueColor = c; 
     this.illColor = "#211a01"
-
   }
 
   setIll(value){
@@ -30,5 +29,4 @@ export default class Cube extends Mesh {
       this.material.color.set(this.trueColor)
     }
   }
-
 }

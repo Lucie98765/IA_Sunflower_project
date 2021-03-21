@@ -6,7 +6,7 @@ import {stayIll} from './illness'
 
 let flowerNames = ['Marguerite','Simone','Georgette','Jeanine','Monique','Ginette','Odette','Germaine','Paulette','Yvette','Berthe','Danielle','Josiane','Michelle','Yvonne','Marcelle','Annie','Jacqueline','Josette','Huguette','Micheline','Claudette','Raymonde','Henriette']
 
-export const plantSeed = (raycaster, mouse, camera, clock ,scene, allFlowers, currentlySelected) => {
+export const plantSeed = (raycaster, mouse, camera, clock ,scene, allFlowers) => {
     window.addEventListener( 'click', () => {
       if(document.querySelector('#plant').classList.value === 'selected'){
         raycaster.setFromCamera( mouse, camera )
@@ -26,7 +26,7 @@ export const plantSeed = (raycaster, mouse, camera, clock ,scene, allFlowers, cu
                 allFlowers.push(newFlower)
                 newFlower.Lsystem("B",1,scene)
                 let stateInterval = setInterval(() => {
-                  nextState(newFlower,scene, currentlySelected)
+                  nextState(newFlower,scene, document.querySelector('#flowerName').innerHTML)
                   if(newFlower.growthLevel >= 100){
                     clearInterval(stateInterval)
                   }
@@ -95,7 +95,7 @@ export const nextState = (flower,scene, currentlySelected) => {
     }
     stayIll(flower,cubeIll, scene)
     if(currentlySelected === flower.idFlower){
-      elementOnScene(flower.idFlower, scene).forEach( item =>{
+        elementOnScene(flower.idFlower, scene).forEach( item =>{
         item.material.color.set("#f23d3d")
       })
     }

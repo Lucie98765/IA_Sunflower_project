@@ -34,7 +34,9 @@ export const love = (allFlowers, scene) => {
     interactionAnimation(flowerInFlowers(idFlower, allFlowers).position.x, flowerInFlowers(idFlower, allFlowers).position.z, highestPoint(idFlower,scene), '#F3C4CF', idFlower,scene)
     updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
+    document.querySelector('#love').classList.add('selected')
     setTimeout(() => {
+        document.querySelector('#love').classList.remove('selected')
       document.querySelector('#love').disabled = false
     },5000)
 }
