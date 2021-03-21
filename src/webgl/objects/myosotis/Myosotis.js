@@ -83,7 +83,6 @@ export default class Myosotis extends Flower{
       z+= this.position.z
       let instruction=init;
       let str = string
-      //for(let i=0;i<1;i++){
       let tmp=''
       instruction.split('').forEach((c) => {
         if(c=="B"){
@@ -94,7 +93,6 @@ export default class Myosotis extends Flower{
         }
       })
       instruction=tmp;
-      //}
       instruction.split('').forEach((c) => {
         if (c=="[") {
           position = [x, y, z]
