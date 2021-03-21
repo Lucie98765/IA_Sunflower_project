@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Vector3, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock, TextureLoader } from 'three'
 
 import { OrbitControls } from './controls/OrbitControls'
 
@@ -34,17 +34,18 @@ export default class Webgl {
     this.scene = new Scene()
     this.scene.background = new Color(0xa9cfe3)
     this.camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
-    this.renderer = new WebGLRenderer()
+    this.renderer = new WebGLRenderer({ antialias: false, alpha:true })
     this.renderer.setSize( window.innerWidth, window.innerHeight )
     document.body.appendChild( this.renderer.domElement )
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
-    this.light = new AmbientLight( 0x404040, 1 ) // soft white light
-    this.scene.add(this.light)
-    this.spotlight = new SpotLight( 0xffffff, 1 )
-    this.spotlight.position.set(200, 200, 200)
-    this.scene.add(this.spotlight)
+    this.spotlight1 = new SpotLight( 0xffffff, 1 )
+    this.spotlight1.position.set(500, 200, 500)
+    this.scene.add(this.spotlight1)
+    this.spotlight2 = new SpotLight( 0xffffff, 1 )
+    this.spotlight2.position.set(-500, 500, -500)
+    this.scene.add(this.spotlight2)
 
     this.clock = new Clock()
     this.clock.start()
@@ -63,7 +64,7 @@ export default class Webgl {
     this.currentlySelected = null
 
     let geometry = new BoxGeometry( 500, 40, 500 )
-    let material = new MeshBasicMaterial( {color: 0x85bea0} )
+    let material = new MeshBasicMaterial( {color: 0x88a56f} )
     this.ground = new Mesh( geometry, material )
     this.ground.position.y = -30
     this.ground.name = 'ground'
@@ -84,6 +85,10 @@ export default class Webgl {
 
     document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false) 
     this.i = 0
+
+    const loader = new TextureLoader();
+    const bgTexture = loader.load('../styles/images/flowers.jpg');
+    this.scene.background = bgTexture;
     
     setInterval( () => {
       this.allFlowers.forEach( flower => {

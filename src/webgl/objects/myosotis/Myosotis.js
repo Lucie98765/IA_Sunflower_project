@@ -13,6 +13,10 @@ export default class Myosotis extends Flower{
         this.state = 0
         this.rotation = Math.floor(Math.random() * (4 - 0) + 0)
 
+        this.randomForColor = Math.floor(Math.random() * (2 - 0) + 0)
+        if (this.randomForColor === 0) this.randomColor = "#e0a6a3"
+        if (this.randomForColor === 1) this.randomColor = "#3179e7"
+
     }
 
     createCube(x,y,z,c,scene){
@@ -23,33 +27,33 @@ export default class Myosotis extends Flower{
     flower(x, y, z,scene,coeffRotation,rotation){
         super.createCube(x,y,z,'#008528', scene)
         if(rotation === 0 ){
-          super.createCube(5*(1+coeffRotation)+x,y,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x,y,z,this.randomColor, scene)
           super.createCube(5*(1+coeffRotation)+x+5,y,z,'#FFD000', scene)
-          super.createCube(5*(1+coeffRotation)+x+5,y+5,z,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x+5,y-5,z,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x+5,y,z+5,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x+5,y,z-5,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y+5,z,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y-5,z,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y,z+5,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x+5,y,z-5,this.randomColor, scene)
         } else if (rotation === 2){
-          super.createCube(5*(1+coeffRotation)+x,y,z,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x,y,z,this.randomColor, scene)
           super.createCube(5*(1+coeffRotation)+x-5,y,z,'#FFD000', scene)
-          super.createCube(5*(1+coeffRotation)+x-5,y+5,z,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x-5,y-5,z,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x-5,y,z+5,'#3179E7', scene)
-          super.createCube(5*(1+coeffRotation)+x-5,y,z-5,'#3179E7', scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y+5,z,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y-5,z,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y,z+5,this.randomColor, scene)
+          super.createCube(5*(1+coeffRotation)+x-5,y,z-5,this.randomColor, scene)
         } else if(rotation === 1){
-          super.createCube(x,y,5*(1+coeffRotation)+z,'#3179E7', scene)
-          super.createCube(x,y+5,5*(1+coeffRotation)+z+5,'#3179E7', scene)
-          super.createCube(x,y-5,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+          super.createCube(x,y,5*(1+coeffRotation)+z,this.randomColor, scene)
+          super.createCube(x,y+5,5*(1+coeffRotation)+z+5,this.randomColor, scene)
+          super.createCube(x,y-5,5*(1+coeffRotation)+z+5,this.randomColor, scene)
           super.createCube(x,y,5*(1+coeffRotation)+z+5,'#FFD000', scene)
-          super.createCube(x+5,y,5*(1+coeffRotation)+z+5,'#3179E7', scene)
-          super.createCube(x-5,y,5*(1+coeffRotation)+z+5,'#3179E7', scene)
+          super.createCube(x+5,y,5*(1+coeffRotation)+z+5,this.randomColor, scene)
+          super.createCube(x-5,y,5*(1+coeffRotation)+z+5,this.randomColor, scene)
         } else {
-          super.createCube(x,y,5*(1+coeffRotation)+z,'#3179E7', scene)
-          super.createCube(x,y+5,5*(1+coeffRotation)+z-5,'#3179E7', scene)
-          super.createCube(x,y-5,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+          super.createCube(x,y,5*(1+coeffRotation)+z,this.randomColor, scene)
+          super.createCube(x,y+5,5*(1+coeffRotation)+z-5,this.randomColor, scene)
+          super.createCube(x,y-5,5*(1+coeffRotation)+z-5,this.randomColor, scene)
           super.createCube(x,y,5*(1+coeffRotation)+z-5,'#FFD000', scene)
-          super.createCube(x+5,y,5*(1+coeffRotation)+z-5,'#3179E7', scene)
-          super.createCube(x-5,y,5*(1+coeffRotation)+z-5,'#3179E7', scene)
+          super.createCube(x+5,y,5*(1+coeffRotation)+z-5,this.randomColor, scene)
+          super.createCube(x-5,y,5*(1+coeffRotation)+z-5,this.randomColor, scene)
         } 
     }
 

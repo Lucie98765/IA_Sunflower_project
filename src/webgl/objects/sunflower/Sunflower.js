@@ -28,11 +28,11 @@ export default class Sunflower extends Flower{
 
     flower(x, y, z,scene,coeffRotation,rotation){
         const c= '#0000FF'
-        super.createCube(x,y,z,'#00FF00', scene)
+        super.createCube(x,y,z,'#008528', scene)
         if(rotation === 0 || rotation === 2){
-            super.createCube(5*(1+coeffRotation)+x,y,z,'#00FF00', scene)
-            super.createCube(5*(1+coeffRotation)+x,y+5,z,'#00FF00', scene)
-            super.createCube(x+10+coeffRotation*10,y+5,z,'#00FF00', scene)
+            super.createCube(5*(1+coeffRotation)+x,y,z,'#008528', scene)
+            super.createCube(5*(1+coeffRotation)+x,y+5,z,'#008528', scene)
+            super.createCube(x+10+coeffRotation*10,y+5,z,'#008528', scene)
 
             super.createCube(15*(1+coeffRotation)+x,y+5,z,'#3f2204', scene)
             super.createCube(15*(1+coeffRotation)+x,y,z,'#3f2204', scene)
@@ -103,9 +103,9 @@ export default class Sunflower extends Flower{
             super.createCube(25*(1+coeffRotation)+x,y+10,z-5,'#3f2204', scene)
         }
         if(rotation === 1 || rotation === 3){
-            super.createCube(+x,y,5*(1+coeffRotation)+z,'#00FF00', scene)
-            super.createCube(+x,y+5,5*(1+coeffRotation)+z,'#00FF00', scene)
-            super.createCube(x,y+5,z+10+coeffRotation*10,'#00FF00', scene)
+            super.createCube(+x,y,5*(1+coeffRotation)+z,'#008528', scene)
+            super.createCube(+x,y+5,5*(1+coeffRotation)+z,'#008528', scene)
+            super.createCube(x,y+5,z+10+coeffRotation*10,'#008528', scene)
 
             super.createCube(x,y+5,z+15*(1+coeffRotation),'#3f2204', scene)
             super.createCube(x-5,y+5,z+15*(1+coeffRotation),'#3f2204', scene)
@@ -179,94 +179,94 @@ export default class Sunflower extends Flower{
     }
 
     leaf(x, y, z,scene,coeffRotation,rotation){
-        super.createCube(x,y,z,'#00FF00', scene)
+        super.createCube(x,y,z,'#008528', scene)
         if(rotation === 0 || rotation === 2){
-            super.createCube(x+5*(1+coeffRotation),y,z,'#00FF00', scene)
-            super.createCube(x+5*(1+coeffRotation),y+5,z,'#00FF00', scene)
+            super.createCube(x+5*(1+coeffRotation),y,z,'#008528', scene)
+            super.createCube(x+5*(1+coeffRotation),y+5,z,'#008528', scene)
 
-            super.createCube(x+10*(1+coeffRotation),y+5,z,'#00FF00', scene)
-            super.createCube(x+10*(1+coeffRotation),y+10,z,'#00FF00', scene)
-            super.createCube(x+10*(1+coeffRotation),y+5,z+5,'#00FF00', scene)
-            super.createCube(x+10*(1+coeffRotation),y+10,z+5,'#00FF00', scene)
-            super.createCube(x+10*(1+coeffRotation),y+5,z-5,'#00FF00', scene)
-            super.createCube(x+10*(1+coeffRotation),y+10,z-5,'#00FF00', scene)   
+            super.createCube(x+10*(1+coeffRotation),y+5,z,'#008528', scene)
+            super.createCube(x+10*(1+coeffRotation),y+10,z,'#008528', scene)
+            super.createCube(x+10*(1+coeffRotation),y+5,z+5,'#008528', scene)
+            super.createCube(x+10*(1+coeffRotation),y+10,z+5,'#008528', scene)
+            super.createCube(x+10*(1+coeffRotation),y+5,z-5,'#008528', scene)
+            super.createCube(x+10*(1+coeffRotation),y+10,z-5,'#008528', scene)   
             
-            super.createCube(x+15*(1+coeffRotation),y+5,z,'#00FF00', scene)
-            super.createCube(x+15*(1+coeffRotation),y+10,z,'#00FF00', scene)
-            super.createCube(x+15*(1+coeffRotation),y+5,z+5,'#00FF00', scene)
-            super.createCube(x+15*(1+coeffRotation),y+10,z+5,'#00FF00', scene)
-            super.createCube(x+15*(1+coeffRotation),y+5,z-5,'#00FF00', scene)
-            super.createCube(x+15*(1+coeffRotation),y+10,z-5,'#00FF00', scene)
+            super.createCube(x+15*(1+coeffRotation),y+5,z,'#008528', scene)
+            super.createCube(x+15*(1+coeffRotation),y+10,z,'#008528', scene)
+            super.createCube(x+15*(1+coeffRotation),y+5,z+5,'#008528', scene)
+            super.createCube(x+15*(1+coeffRotation),y+10,z+5,'#008528', scene)
+            super.createCube(x+15*(1+coeffRotation),y+5,z-5,'#008528', scene)
+            super.createCube(x+15*(1+coeffRotation),y+10,z-5,'#008528', scene)
             
-            super.createCube(x+20*(1+coeffRotation),y+10,z,'#00FF00', scene)
-            super.createCube(x+20*(1+coeffRotation),y+15,z,'#00FF00', scene)
-            super.createCube(x+20*(1+coeffRotation),y+10,z+5,'#00FF00', scene)
-            super.createCube(x+20*(1+coeffRotation),y+15,z+5,'#00FF00', scene)
-            super.createCube(x+20*(1+coeffRotation),y+10,z-5,'#00FF00', scene)
-            super.createCube(x+20*(1+coeffRotation),y+15,z-5,'#00FF00', scene)
+            super.createCube(x+20*(1+coeffRotation),y+10,z,'#008528', scene)
+            super.createCube(x+20*(1+coeffRotation),y+15,z,'#008528', scene)
+            super.createCube(x+20*(1+coeffRotation),y+10,z+5,'#008528', scene)
+            super.createCube(x+20*(1+coeffRotation),y+15,z+5,'#008528', scene)
+            super.createCube(x+20*(1+coeffRotation),y+10,z-5,'#008528', scene)
+            super.createCube(x+20*(1+coeffRotation),y+15,z-5,'#008528', scene)
 
-            super.createCube(x+25*(1+coeffRotation),y+10,z,'#00FF00', scene)
-            super.createCube(x+25*(1+coeffRotation),y+15,z,'#00FF00', scene)
-            super.createCube(x+25*(1+coeffRotation),y+10,z+5,'#00FF00', scene)
-            super.createCube(x+25*(1+coeffRotation),y+15,z+5,'#00FF00', scene)
-            super.createCube(x+25*(1+coeffRotation),y+10,z-5,'#00FF00', scene)
-            super.createCube(x+25*(1+coeffRotation),y+15,z-5,'#00FF00', scene)
+            super.createCube(x+25*(1+coeffRotation),y+10,z,'#008528', scene)
+            super.createCube(x+25*(1+coeffRotation),y+15,z,'#008528', scene)
+            super.createCube(x+25*(1+coeffRotation),y+10,z+5,'#008528', scene)
+            super.createCube(x+25*(1+coeffRotation),y+15,z+5,'#008528', scene)
+            super.createCube(x+25*(1+coeffRotation),y+10,z-5,'#008528', scene)
+            super.createCube(x+25*(1+coeffRotation),y+15,z-5,'#008528', scene)
             
-            super.createCube(x+30*(1+coeffRotation),y+15,z,'#00FF00', scene) 
-            super.createCube(x+30*(1+coeffRotation),y+20,z,'#00FF00', scene)
-            super.createCube(x+30*(1+coeffRotation),y+15,z+5,'#00FF00', scene) 
-            super.createCube(x+30*(1+coeffRotation),y+20,z+5,'#00FF00', scene)
-            super.createCube(x+30*(1+coeffRotation),y+15,z-5,'#00FF00', scene) 
-            super.createCube(x+30*(1+coeffRotation),y+20,z-5,'#00FF00', scene)
+            super.createCube(x+30*(1+coeffRotation),y+15,z,'#008528', scene) 
+            super.createCube(x+30*(1+coeffRotation),y+20,z,'#008528', scene)
+            super.createCube(x+30*(1+coeffRotation),y+15,z+5,'#008528', scene) 
+            super.createCube(x+30*(1+coeffRotation),y+20,z+5,'#008528', scene)
+            super.createCube(x+30*(1+coeffRotation),y+15,z-5,'#008528', scene) 
+            super.createCube(x+30*(1+coeffRotation),y+20,z-5,'#008528', scene)
             
-            super.createCube(x+35*(1+coeffRotation),y+15,z,'#00FF00', scene) 
-            super.createCube(x+35*(1+coeffRotation),y+20,z,'#00FF00', scene)
+            super.createCube(x+35*(1+coeffRotation),y+15,z,'#008528', scene) 
+            super.createCube(x+35*(1+coeffRotation),y+20,z,'#008528', scene)
             
-            super.createCube(x+40*(1+coeffRotation),y+20,z,'#00FF00', scene) 
+            super.createCube(x+40*(1+coeffRotation),y+20,z,'#008528', scene) 
         }
         if(rotation === 1 || rotation === 3){
-            super.createCube(x,y,z+5*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x,y+5,z+5*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y,z+5*(1+coeffRotation),'#008528', scene)
+            super.createCube(x,y+5,z+5*(1+coeffRotation),'#008528', scene)
 
-            super.createCube(x,y+5,z+10*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x,y+10,z+10*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+5,z+10*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+10,z+10*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+5,z+10*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+10,z+10*(1+coeffRotation),'#00FF00', scene)   
+            super.createCube(x,y+5,z+10*(1+coeffRotation),'#008528', scene)
+            super.createCube(x,y+10,z+10*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+5,z+10*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+10,z+10*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+5,z+10*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+10,z+10*(1+coeffRotation),'#008528', scene)   
             
-            super.createCube(x,y+5,z+15*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x,y+10,z+15*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+5,z+15*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+10,z+15*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+5,z+15*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+10,z+15*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y+5,z+15*(1+coeffRotation),'#008528', scene)
+            super.createCube(x,y+10,z+15*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+5,z+15*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+10,z+15*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+5,z+15*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+10,z+15*(1+coeffRotation),'#008528', scene)
             
-            super.createCube(x,y+10,z+20*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x,y+15,z+20*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+10,z+20*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+15,z+20*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+10,z+20*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+15,z+20*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y+10,z+20*(1+coeffRotation),'#008528', scene)
+            super.createCube(x,y+15,z+20*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+10,z+20*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+15,z+20*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+10,z+20*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+15,z+20*(1+coeffRotation),'#008528', scene)
 
-            super.createCube(x,y+10,z+25*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x,y+15,z+25*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+10,z+25*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+15,z+25*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+10,z+25*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+15,z+25*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y+10,z+25*(1+coeffRotation),'#008528', scene)
+            super.createCube(x,y+15,z+25*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+10,z+25*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+15,z+25*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+10,z+25*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+15,z+25*(1+coeffRotation),'#008528', scene)
             
-            super.createCube(x,y+15,z+30*(1+coeffRotation),'#00FF00', scene) 
-            super.createCube(x,y+20,z+30*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x+5,y+15,z+30*(1+coeffRotation),'#00FF00', scene) 
-            super.createCube(x+5,y+20,z+30*(1+coeffRotation),'#00FF00', scene)
-            super.createCube(x-5,y+15,z+30*(1+coeffRotation),'#00FF00', scene) 
-            super.createCube(x-5,y+20,z+30*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y+15,z+30*(1+coeffRotation),'#008528', scene) 
+            super.createCube(x,y+20,z+30*(1+coeffRotation),'#008528', scene)
+            super.createCube(x+5,y+15,z+30*(1+coeffRotation),'#008528', scene) 
+            super.createCube(x+5,y+20,z+30*(1+coeffRotation),'#008528', scene)
+            super.createCube(x-5,y+15,z+30*(1+coeffRotation),'#008528', scene) 
+            super.createCube(x-5,y+20,z+30*(1+coeffRotation),'#008528', scene)
             
-            super.createCube(x,y+15,z+35*(1+coeffRotation),'#00FF00', scene) 
-            super.createCube(x,y+20,z+35*(1+coeffRotation),'#00FF00', scene)
+            super.createCube(x,y+15,z+35*(1+coeffRotation),'#008528', scene) 
+            super.createCube(x,y+20,z+35*(1+coeffRotation),'#008528', scene)
             
-            super.createCube(x,y+20,z+40*(1+coeffRotation),'#00FF00', scene) 
+            super.createCube(x,y+20,z+40*(1+coeffRotation),'#008528', scene) 
         }    
     }
     //"TTTF-TTTS-TTTF-TTTF-TTTS-TB"
@@ -322,7 +322,7 @@ export default class Sunflower extends Flower{
             y+=5
           } else if(c=="T"){
             c=str
-            super.createCube(x,y,z,'#00FF00',scene)
+            super.createCube(x,y,z,'#008528',scene)
             y+=5
           } else if(c=="S"){
             c=str
