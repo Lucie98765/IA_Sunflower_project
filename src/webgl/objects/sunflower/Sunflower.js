@@ -2,7 +2,7 @@ import Flower from '../flower/Flower'
 
 const sentences = [
   ['TTT-B','TTTF-TTTT-TTTF-TB','TTTF-TTTS-TTTF-TB'],
-  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TSTT--TB'],
+  ['TTT-B','TTFT-TTTT-TTTT--TB','TTFT-TSTT-TFTT--TB'],
   ['TTT-B','TTTT-TTFTT-TTTTT-TB','TTTTS-TTFTT-TTTTS-TB'],
   ['TTT-B','TT-TF-TT-TB','TT-TF-TS-TB']
 ]
@@ -16,7 +16,7 @@ export default class Sunflower extends Flower{
         const min=0 
         const max=4 
         const random = Math.random() * (max - min) + min
-        this.string = sentences[Math.floor(random)]
+        this.string = sentences[random]
 
         this.state = 0
     }
