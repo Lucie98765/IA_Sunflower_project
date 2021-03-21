@@ -29,6 +29,8 @@ export default class Flower {
       if(this.wateringLevel <= 80 && this.wateringLevel >= 60){
         if(this.growthLevel < 100){
           this.growthLevel += 5
+        } else if (this.growthLevel+5 > 100){
+          this.growthLevel = 100
         }
       }
     }

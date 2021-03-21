@@ -1,7 +1,8 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Vector3, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock } from 'three'
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight, Raycaster,Vector2, BoxGeometry, MeshBasicMaterial, Mesh, Clock, TextureLoader } from 'three'
 
 import { OrbitControls } from './controls/OrbitControls'
 
+import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
 
@@ -33,17 +34,24 @@ export default class Webgl {
     this.scene = new Scene()
     this.scene.background = new Color(0xa9cfe3)
     this.camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 )
-    this.renderer = new WebGLRenderer()
+    this.renderer = new WebGLRenderer({ antialias: false, alpha:true })
     this.renderer.setSize( window.innerWidth, window.innerHeight )
     document.body.appendChild( this.renderer.domElement )
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
 
-    this.light = new AmbientLight( 0x404040, 1 ) // soft white light
-    this.scene.add(this.light)
-    this.spotlight = new SpotLight( 0xffffff, 1 )
-    this.spotlight.position.set(200, 200, 200)
-    this.scene.add(this.spotlight)
+    this.spotlight1 = new SpotLight( 0xffffff, 1 )
+    this.spotlight1.position.set(300, 600, 300)
+    this.scene.add(this.spotlight1)
+    this.spotlight2 = new SpotLight( 0xffffff, 1 )
+    this.spotlight2.position.set(-300, 600, -300)
+    this.scene.add(this.spotlight2)
+    this.spotlight4 = new SpotLight( 0xffffff, 1 )
+    this.spotlight4.position.set(400, 700, -400)
+    this.scene.add(this.spotlight4)
+    this.spotlight5 = new SpotLight( 0xffffff, 1 )
+    this.spotlight5.position.set(-400, 700, 400)
+    this.scene.add(this.spotlight5)
 
     this.clock = new Clock()
     this.clock.start()
@@ -62,7 +70,7 @@ export default class Webgl {
     this.currentlySelected = null
 
     let geometry = new BoxGeometry( 500, 40, 500 )
-    let material = new MeshBasicMaterial( {color: 0x85bea0} )
+    let material = new MeshBasicMaterial( {color: 0x88a56f} )
     this.ground = new Mesh( geometry, material )
     this.ground.position.y = -30
     this.ground.name = 'ground'
@@ -83,6 +91,10 @@ export default class Webgl {
 
     document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false) 
     this.i = 0
+
+    const loader = new TextureLoader();
+    const bgTexture = loader.load('../styles/images/flowers.jpg');
+    this.scene.background = bgTexture;
     
     setInterval( () => {
       this.allFlowers.forEach( flower => {
@@ -90,7 +102,7 @@ export default class Webgl {
       })
       if(this.currentlySelected != null){
         this.elementOnScene(this.currentlySelected).forEach( item =>{
-          item.material.color.set("#FF0000")
+          item.material.color.set("#f23d3d")
         })
       }
     }, 1000)
@@ -142,7 +154,7 @@ export default class Webgl {
           setTimeout( () => {
             flowerElements[i].setIll(false)
             if(this.currentlySelected === flowerElements[i].idFlower){
-              flowerElements[i].material.color.set("#FF0000")
+              flowerElements[i].material.color.set("#f23d3d")
             }
           }, 500 )
         }
@@ -183,7 +195,7 @@ export default class Webgl {
         document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
         currentFlowerOnScene.forEach( element => {
           if(element.isSelected != true){
-            element.material.color.set( 0xff0000 )
+            element.material.color.set( 0xf23d3d )
             element.isSelected = true
           } else {
             element.material.color.setHex(element.trueColor.replace('#','0x').toLowerCase())
@@ -230,7 +242,7 @@ export default class Webgl {
     if(currentFlower.wateringLevel < 100){
       currentFlower.wateringLevel += 5
     }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#0000FF', idFlower)
+    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#2fc7ea', idFlower)
     this.updateWateringLevel(currentFlower)
   }
   sun() {
@@ -246,14 +258,17 @@ export default class Webgl {
     const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
     const currentFlower = this.flowerInFlowers(idFlower)
     if(currentFlower.growthLevel < 100){
-      currentFlower.growthLevel += 1
+      if((currentFlower.growthLevel + 1) > 100){
+        currentFlower.growthLevel = 100
+      } else {
+        currentFlower.growthLevel += 1
+      }
     }
     this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CF', idFlower)
     this.updateGrowthLevel(currentFlower)
     document.querySelector('#love').disabled = true
     setTimeout(() => {
       document.querySelector('#love').disabled = false
-      
     },5000)
   }
   elementOnScene (idElement) {
@@ -301,7 +316,7 @@ export default class Webgl {
                 newFlower.Lsystem("B",1,this.scene)
                 let stateInterval = setInterval(() => {
                   this.nextState(newFlower)
-                  if(newFlower.growthLevel === 100){
+                  if(newFlower.growthLevel >= 100){
                     clearInterval(stateInterval)
                   }
                 },4000*this.levelCoeff)
@@ -394,7 +409,11 @@ export default class Webgl {
   }
   updateGrowthLevel(flower){
     document.querySelector('#growthLevel').value = flower.growthLevel
-    document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
+    if (flower.growthLevel > 100) {
+      document.querySelector('#growth').innerHTML = '100%'
+    } else {
+      document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
+    }
   }
   nextState(flower){
     if(flower.growthLevel >=5 && flower.growthLevel<=10){
@@ -434,13 +453,13 @@ export default class Webgl {
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",3,this.scene)
     }
-    if(flower.growthLevel === 100){
+    if(flower.growthLevel >= 100){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",4,this.scene)
     }
     if(this.currentlySelected === flower.idFlower){
       this.elementOnScene(flower.idFlower).forEach( item =>{
-        item.material.color.set("#FF0000")
+        item.material.color.set("#f23d3d")
       })
     }
   }

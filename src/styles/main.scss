@@ -2,21 +2,21 @@ html, body {
   padding: 0px;
   margin: 0px;
   font-family: 'Viga', sans-serif;
-  color: #eeeeee;
+  color: #e9e6ca;
   width: 100%;
   height: 100%;
   overflow: hidden;
   position: relative;
-  background-color: #a9cfe3;
+  background-color: #a69d6e;
 
   button{
     font-family: 'Viga', sans-serif;
-    color: #A9CFE3;
-    background-color: #FFF599;
+    color: #a69d6e;
+    background-color: #e9e6ca;
     font-size: large;
     padding: 2%;
     border-radius: 10px;
-    border-color:  #FFF599;
+    border-color:  #e9e6ca;
     border-style: solid;
 
     .selected {
@@ -27,14 +27,87 @@ html, body {
     }
   }
   button:hover{
-    color:  #FFF599;
-    border-color:  #FFF599;
+    color:  #e9e6ca;
+    border-color:  #e9e6ca;
     border-style: solid;
-    background-color:rgba(255, 255, 252, 0.25);
+    background-color:rgba(166, 157, 110, 0.6);
+  }
+}
+#close{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  margin-top: -10vh;
+  font-size: 18px;
+  #explanation{
+    z-index: 10;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    margin: 5vh;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30vw;
+    align-items: flex-end;
+    p{
+      color: #a69d6e;
+      margin-top: auto;
+      margin-left: 10px;
+      margin-right: 10px;
+      backdrop-filter: blur(5px);
+      padding: 8px;
+      text-align: justify;
+      border: solid;
+    }
+    img{
+      width: 10vw;
+      position: absolute;
+      bottom: 10px;
+      left: -110px;
+    }
+  }
+  #popup {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 10;
+    border-color:  #e9e6ca;
+    border-style: solid;
+    color:  #e9e6ca;
+    background-color: rgba(166, 157, 110, 0.8);
+    border-radius: 10px;
+    padding: 2%;
+    width: 20vw;
+    text-align: center;
+    .hidden{
+      display: none;
+    }
+    button{
+      color: #a69d6e;
+    }
+    button:hover{
+      color: #e9e6ca;
+    }
+    p{
+      margin-top: 0;
+    }
+  }
+  #blue{
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #a69d6e;
+    background-image: url('./images/flowers.jpg');
+    background-position: center;
+    z-index: 3;
   }
 }
 progress {
-  border: 4px solid #FFF599;
+  border: 4px solid #e9e6ca;
   border-radius: 20px;
   background:rgba(255, 255, 252, 0.5);
   z-index: 100;
@@ -54,14 +127,17 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
+  background-image: url('./images/flowers.jpg');
 }
-
 h1 {
   z-index: 4;
   position: relative;
   pointer-events: none;
   margin-left: 4%;
-}  
+  margin-top: 2%;
+  color: #e0a6a3;
+  font-size: 35px;
+}
 #menu{
   z-index: 2;
   position: relative;
@@ -70,6 +146,10 @@ h1 {
   width: 25% ;
   left:70%;
   text-align: center;
+  backdrop-filter: blur(5px);
+  padding: 8px;
+  border: solid #a69d6e;
+  color: #a69d6e;
   #love {
     border-radius: 30px;
     width: 60px;
@@ -81,10 +161,9 @@ h1 {
       margin: 3% auto;
   }
   #infoSelected{
-    //background-color:rgba(255, 255, 252, 0.5);
-    background-color: #a9cfe3;
-    border-color:  #FFF599;
-    color: #FFF599;
+    background-color: rgba(166, 157, 110, 0.8);
+    border-color:  #e9e6ca;
+    color: #e9e6ca;
     border-style: solid;
     border-radius: 10px;
     width: 70%;
@@ -108,7 +187,6 @@ h1 {
       justify-content: space-between;
       button{
         width: 47%;
-        
       }
     }
     button {
@@ -116,8 +194,8 @@ h1 {
     }
   }
   .selected{
-    color:  #FFF599;
-    border-color:  #FFF599;
+    color:  #a69d6e;
+    border-color:  #a69d6e;
     border-style: solid;
     background-color:rgba(255, 255, 252, 0.25);
   }
@@ -125,42 +203,14 @@ h1 {
     display: none;
   }
 }
-#popup {
-  position: absolute;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
-  border-color:  #FFF599;
-  border-style: solid;
-  color:  #FFF599;
-  border-radius: 10px;
-  padding: 2%;
-  width: 40vw;
-  height: 20vh;
-  text-align: center;
-  .hidden{
-    display: none;
-  }
-}
 #error{
   position: absolute;
   z-index: 9;
-  color: white;
+  color: #e9e6ca;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-}
-#blue{
-  position: absolute;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #a9cfe3;
-  z-index: 3;
 }
 .plantSeed{
   cursor: pointer;
