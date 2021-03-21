@@ -14,7 +14,7 @@ Les graines plantées sont choisies aléatoirement entre deux types de fleurs (t
 La maladie est basée sur le principe du jeu de la vie. 
 
 
-## Instalation du project
+## Installation du projet
 `npm i`
 
 ## Lancer le projet en mode développement
