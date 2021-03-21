@@ -1,4 +1,5 @@
 import {elementOnScene} from './sceneManagement'
+
 // Vérification taux des jauges
 export const checkIllness = (flower,currentlySelected, scene) => {
     const max = flower.grid.length

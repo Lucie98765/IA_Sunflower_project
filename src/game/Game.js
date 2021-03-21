@@ -2,11 +2,11 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, SpotLight
 
 import { OrbitControls } from './controls/OrbitControls'
 
-import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
-import {checkIllness, spreadIllness, stayIll} from './features/illness'
-import {elementOnScene} from './features/sceneManagement'
+import {checkIllness, stayIll} from './features/illness'
+import {elementOnScene, flowerAtPosition, removeElement, flowerInFlowers} from './features/sceneManagement'
+import {water, sun, love, updateSunshineLevel, updateWateringLevel, updateGrowthLevel} from './features/dipsticks'
 
 export default class Game {
   constructor() {
@@ -15,10 +15,6 @@ export default class Game {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.select = this.select.bind(this)
     this.update = this.update.bind(this)
-    this.flowerInFlowers = this.flowerInFlowers.bind(this)
-    this.water =this.water.bind(this)
-    this.sun =this.sun.bind(this)
-    this.love =this.love.bind(this)
 
     this.scene = new Scene()
     this.scene.background = new Color(0xa9cfe3)
@@ -77,9 +73,9 @@ export default class Game {
       document.querySelector('#plant').classList.toggle('selected')
     }, false )
 
-    document.querySelector('#water').addEventListener('click',this.water,false)
-    document.querySelector('#sun').addEventListener('click',this.sun,false)
-    document.querySelector('#love').addEventListener('click',this.love,false)
+    document.querySelector('#water').addEventListener('click',() => {water(this.allFlowers, this.scene)},false)
+    document.querySelector('#sun').addEventListener('click',() => {sun(this.allFlowers, this.scene)},false)
+    document.querySelector('#love').addEventListener('click',() => {love(this.allFlowers, this.scene)},false)
 
     document.querySelector('.levelManagement').addEventListener('click',this.levelManagement,false) 
     this.i = 0
@@ -104,6 +100,7 @@ export default class Game {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
+
   select(event){
     if(this.currentlySelected != null){
       this.deselectFlowers()
@@ -123,13 +120,13 @@ export default class Game {
         })
       }
       this.currentlySelected = id
-      const flower = this.flowerInFlowers(id)
+      const flower = flowerInFlowers(id, this.allFlowers)
       if(type === 'flower'){
         document.querySelector('#infoSelected').classList.remove('hidden')
         document.querySelector('#flowerName').innerHTML = flower.idFlower
-        this.updateSunshineLevel(flower)
-        this.updateWateringLevel(flower)
-        this.updateGrowthLevel(flower)
+        updateSunshineLevel(flower)
+        updateWateringLevel(flower)
+        updateGrowthLevel(flower)
         document.querySelector('#growthLevel').value = flower.growthLevel
         document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
         currentFlowerOnScene.forEach( element => {
@@ -153,15 +150,7 @@ export default class Game {
       this.currentlySelected = null
     }
   }
-  flowerAtPosition (x,z) {
-    let result = false
-    this.allFlowers.forEach ( flower => {
-      if((x >= flower.position.x - 15 &&  x < flower.position.x + 15) && (z >= flower.position.z - 15 &&  z < flower.position.z + 15)){
-        result =true
-      }
-    })
-    return result
-  }
+  
   deselectFlowers () {
     this.scene.children.forEach(element => {
       if(element.type === 'flower'){
@@ -177,54 +166,8 @@ export default class Game {
       flower.isSelected = false
     })
   }
-  water() {
-    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
-    const currentFlower = this.flowerInFlowers(idFlower)
-    if(currentFlower.wateringLevel < 100){
-      currentFlower.wateringLevel += 5
-    }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#2fc7ea', idFlower)
-    this.updateWateringLevel(currentFlower)
-  }
-  sun() {
-    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
-    const currentFlower = this.flowerInFlowers(idFlower)
-    if(currentFlower.sunshineLevel < 100){
-      currentFlower.sunshineLevel += 5
-    }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F7FF3C', idFlower)
-    this.updateSunshineLevel(currentFlower)
-  }
-  love() {
-    const idFlower = document.querySelector('#infoSelected').querySelector('#flowerName').innerHTML
-    const currentFlower = this.flowerInFlowers(idFlower)
-    if(currentFlower.growthLevel < 100){
-      if((currentFlower.growthLevel + 1) > 100){
-        currentFlower.growthLevel = 100
-      } else {
-        currentFlower.growthLevel += 1
-      }
-    }
-    this.interactionAnimation(this.flowerInFlowers(idFlower).position.x, this.flowerInFlowers(idFlower).position.z, this.highestPoint(idFlower), '#F3C4CF', idFlower)
-    this.updateGrowthLevel(currentFlower)
-    document.querySelector('#love').disabled = true
-    setTimeout(() => {
-      document.querySelector('#love').disabled = false
-    },5000)
-  }
-  removeElement (idElement) {
-    const flower = elementOnScene(idElement, this.scene)
-    flower.forEach(element => this.scene.remove(element) )
-  }
-  flowerInFlowers(idFlower){
-    let currentFlower =''
-    this.allFlowers.forEach(flower => {
-      if(flower.idFlower === idFlower){
-        currentFlower = flower
-      }
-    })
-    return currentFlower
-  }
+
+  
   plantSeed(){
     window.addEventListener( 'click', () => {
       if(document.querySelector('#plant').classList.value === 'selected'){
@@ -233,7 +176,7 @@ export default class Game {
         if(intersects[ 0 ]) {
           if(intersects[ 0 ].object.name === 'ground'){
             if(document.querySelector('#plant').disabled != true){
-              if(this.flowerAtPosition(intersects[ 0 ].point.x,intersects[ 0 ].point.z) === false){
+              if(flowerAtPosition(intersects[ 0 ].point.x,intersects[ 0 ].point.z, this.allFlowers) === false){
                 let newFlower
                 let randomFlower = Math.floor(Math.random() * (2 - 0) + 0)
                 if(randomFlower === 0) {
@@ -286,9 +229,9 @@ export default class Game {
         }
       }  
       if(this.currentlySelected === flower.idFlower){
-        this.updateWateringLevel(flower)
-        this.updateSunshineLevel(flower)
-        this.updateGrowthLevel(flower)
+        updateWateringLevel(flower)
+        updateSunshineLevel(flower)
+        updateGrowthLevel(flower)
       }
 
     })
@@ -310,42 +253,7 @@ export default class Game {
     }
 
   }
-  updateSunshineLevel(flower){
-    document.querySelector('#sunshineLevel').value = flower.sunshineLevel
-    document.querySelector('#sunshine').innerHTML = flower.sunshineLevel + '%'
-    if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90){
-      document.querySelector('#sunshineLevel').classList.add('ill')
-    } else{
-      document.querySelector('#sunshineLevel').classList.remove('ill')
-    }
-    if(flower.sunshineLevel <= 80 && flower.sunshineLevel >= 60){
-      document.querySelector('#sunshineLevel').classList.add('good')
-    }else{
-      document.querySelector('#sunshineLevel').classList.remove('good')
-    }
-  }
-  updateWateringLevel(flower){
-    document.querySelector('#wateringLevel').value = flower.wateringLevel
-    document.querySelector('#watering').innerHTML = flower.wateringLevel + '%'
-    if(flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
-      document.querySelector('#wateringLevel').classList.add('ill')
-    } else{
-      document.querySelector('#wateringLevel').classList.remove('ill')
-    }
-    if(flower.wateringLevel <= 80 && flower.wateringLevel >= 60){
-      document.querySelector('#wateringLevel').classList.add('good')
-    }else{
-      document.querySelector('#wateringLevel').classList.remove('good')
-    }
-  }
-  updateGrowthLevel(flower){
-    document.querySelector('#growthLevel').value = flower.growthLevel
-    if (flower.growthLevel > 100) {
-      document.querySelector('#growth').innerHTML = '100%'
-    } else {
-      document.querySelector('#growth').innerHTML = flower.growthLevel + '%'
-    }
-  }
+
   nextState(flower){
     if(flower.growthLevel >=5 && flower.growthLevel<=10){
       flower.state =0
@@ -358,35 +266,35 @@ export default class Game {
     }
     const cubeIll = elementOnScene(flower.idFlower, this.scene).filter(element => element.ill ===true)
     if(flower.growthLevel >=5 && flower.growthLevel<10){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",1,this.scene)
     }
     if(flower.growthLevel >=10 && flower.growthLevel<15){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=15 && flower.growthLevel<20){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",3,this.scene)
     }
     if(flower.growthLevel >=20 && flower.growthLevel<35){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",1,this.scene)
     }
     if(flower.growthLevel >=35 && flower.growthLevel<50){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=50 && flower.growthLevel<70){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",2,this.scene)
     }
     if(flower.growthLevel >=70 && flower.growthLevel<100){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",3,this.scene)
     }
     if(flower.growthLevel >= 100){
-      this.removeElement(flower.idFlower)
+      removeElement(flower.idFlower, this.scene)
       flower.Lsystem("B",4,this.scene)
     }
     stayIll(flower,cubeIll, this.scene)
@@ -395,69 +303,6 @@ export default class Game {
         item.material.color.set("#f23d3d")
       })
     }
-  }
-  highestPoint (idFlower){
-    let temporary = elementOnScene(idFlower, this.scene)[0].position.y
-    elementOnScene(idFlower, this.scene).forEach( item => {
-      if(temporary < item.position.y){
-        temporary = item.position.y
-      }
-    })
-    return temporary
-  }
-  interactionAnimation (x,z,y,c,idFlower) {
-      let cube = new Cube (x-10,y+35,z,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-10,y+30,z+10,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-10,y+40,z-10,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-20,y+45,z,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-20,y+50,z+10,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x-20,y+35,z-10,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x,y+30,z,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x,y+35,z+20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      cube = new Cube (x,y+40,z-20,c, false)
-      cube.type = 'animation'
-      cube.idAnim = idFlower
-      this.scene.add(cube)
-      this.scene.children.forEach( item => {
-        if (item.idAnim === cube.idAnim){
-          let i = 0
-          const animation = setInterval(() => {
-            i++
-            item.position.y -= 15
-            if(item.position.y < y ){
-              this.scene.remove(item)
-            }
-            if(i === 5){
-              this.scene.remove(item)
-              clearInterval(animation)
-            }
-          }, 50)
-        }
-      })
   }
   start () {
     requestAnimationFrame( this.start )
