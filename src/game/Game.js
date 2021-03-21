@@ -5,6 +5,8 @@ import { OrbitControls } from './controls/OrbitControls'
 import Cube from './objects/Cube'
 import Sunflower from './objects/sunflower/Sunflower'
 import Myosotis from './objects/myosotis/Myosotis'
+import {checkIllness, spreadIllness, stayIll} from './features/illness'
+import {elementOnScene} from './features/sceneManagement'
 
 export default class Game {
   constructor() {
@@ -88,78 +90,16 @@ export default class Game {
     
     setInterval( () => {
       this.allFlowers.forEach( flower => {
-        this.checkIllness(flower)
+        checkIllness(flower, this.currentlySelected, this.scene)
       })
       if(this.currentlySelected != null){
-        this.elementOnScene(this.currentlySelected).forEach( item =>{
+        elementOnScene(this.currentlySelected, this.scene).forEach( item =>{
           item.material.color.set("#f23d3d")
         })
       }
     }, 1000)
   }
-  // Vérification taux des jauges
-  checkIllness(flower) {
-    const max = flower.grid.length
-    if(flower.sunshineLevel <= 10 || flower.sunshineLevel >= 90 || flower.wateringLevel <= 10 || flower.wateringLevel >= 90){
-      flower.grid[max-1].setIll(true)
-      let i = 0;
-        this.spreadIllness(flower.idFlower, max)
-        i++
-    } else {
-      this.recover (flower.idFlower, max)
-    }
-  }
-  // Propagation maladie
-  spreadIllness (flowerId, max) {
-    let flowerElements = this.elementOnScene(flowerId)
-    for (let k = 0; k < max; k++) {
-      let illNeighbour = 0
-      for(let j = -5; j <6; j++){
-        if ((k + j >= 0) && (k + j < max) && j!=k ){ // pour ne pas sortir du tableau + ne pas comptabiliser le cube malade comme un voisin malade
-          if(flowerElements[k + j]) {
-            if(flowerElements[k + j].ill){
-              illNeighbour = illNeighbour + 1
-            }   
-          }
-        }
-      }
-      if (illNeighbour >= 1 && illNeighbour <= 8){
-        if(flowerElements[k]){
-          flowerElements[k].setIll(true)
-        } 
-      }
-      if (illNeighbour > 9){
-        if(flowerElements[k]){
-          flowerElements[k].setIll(false)
-        } 
-      }
-    }
-  }
-  // Rétablissement de la plante
-  recover (flowerId, max) {
-    let flowerElements = this.elementOnScene(flowerId)
-    for(let i = 0; i<max; i++){
-      if(flowerElements[i]) {
-        if(flowerElements[i].ill){
-          setTimeout( () => {
-            flowerElements[i].setIll(false)
-            if(this.currentlySelected === flowerElements[i].idFlower){
-              flowerElements[i].material.color.set("#f23d3d")
-            }
-          }, 500 )
-        }
-      }
-    }
-  }
-  stayIll(flower,cubeIll){
-    this.elementOnScene(flower.idFlower).forEach( cube => {
-      cubeIll.forEach( cubeIll => {
-        if(cubeIll.position.x === cube.position.x && cubeIll.position.y === cube.position.y && cubeIll.position.z === cube.position.z){
-          cube.setIll(true)
-        }
-      })
-    })
-  }
+  
   onMouseMove( event ) {
     this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -175,7 +115,7 @@ export default class Game {
     let type = null
     if(typeof intersects[0] === 'object'){
       id = intersects[0].object.idFlower
-      currentFlowerOnScene = this.elementOnScene(id)
+      currentFlowerOnScene = elementOnScene(id, this.scene)
       type = intersects[0].object.type
       if(this.currentlySelected === id ){
         currentFlowerOnScene.forEach(element => {
@@ -272,17 +212,8 @@ export default class Game {
       document.querySelector('#love').disabled = false
     },5000)
   }
-  elementOnScene (idElement) {
-    let elements = []
-    this.scene.children.forEach(element => {
-      if(element.idFlower === idElement){
-        elements.push(element)
-      }
-    })
-    return elements    
-  }
   removeElement (idElement) {
-    const flower = this.elementOnScene(idElement)
+    const flower = elementOnScene(idElement, this.scene)
     flower.forEach(element => this.scene.remove(element) )
   }
   flowerInFlowers(idFlower){
@@ -425,7 +356,7 @@ export default class Game {
     if(flower.growthLevel >= 55 && flower.growthLevel<=100){
       flower.state = 2
     }
-    const cubeIll = this.elementOnScene(flower.idFlower).filter(element => element.ill ===true)
+    const cubeIll = elementOnScene(flower.idFlower, this.scene).filter(element => element.ill ===true)
     if(flower.growthLevel >=5 && flower.growthLevel<10){
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",1,this.scene)
@@ -458,16 +389,16 @@ export default class Game {
       this.removeElement(flower.idFlower)
       flower.Lsystem("B",4,this.scene)
     }
-    this.stayIll(flower,cubeIll)
+    stayIll(flower,cubeIll, this.scene)
     if(this.currentlySelected === flower.idFlower){
-      this.elementOnScene(flower.idFlower).forEach( item =>{
+      elementOnScene(flower.idFlower, this.scene).forEach( item =>{
         item.material.color.set("#f23d3d")
       })
     }
   }
   highestPoint (idFlower){
-    let temporary = this.elementOnScene(idFlower)[0].position.y
-    this.elementOnScene(idFlower).forEach( item => {
+    let temporary = elementOnScene(idFlower, this.scene)[0].position.y
+    elementOnScene(idFlower, this.scene).forEach( item => {
       if(temporary < item.position.y){
         temporary = item.position.y
       }
